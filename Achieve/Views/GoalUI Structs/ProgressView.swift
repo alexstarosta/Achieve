@@ -48,7 +48,8 @@ struct ProgressView: View {
         }
         if info.currentlyCustom != true {
             if startNumber == endNumber {
-                if bottomTextType != 1 && bottomTextType != 2 && bottomTextType != 3 {
+                if bottomTextType != 1 && bottomTextType != 2 && bottomTextType != 3 && info.isCompleted == false {
+                    info.startingNum = endNumber
                     goalCompleted()
                 } else {
                     doneForToday()
@@ -129,6 +130,8 @@ struct ProgressView: View {
         } else if bottomTextType == 2{
             info.timesCompleted += 1
         }
+        
+        if screenInfo.activeGoalsArray.count-1 <= 0 {return}
         
         for index in 0...screenInfo.activeGoalsArray.count-1 {
             if screenInfo.activeGoalsArray[index].isDoneForToday {
@@ -254,8 +257,8 @@ struct ProgressView: View {
                                 
                             } else {
                                 addOne()
-                                
                             }
+                            
                         }, label: {
                             Image(systemName: self.isLongPressingPlus ? "goforward.plus": "plus")
                                 .foregroundColor(Color(UIColor.systemBackground))
@@ -265,7 +268,9 @@ struct ProgressView: View {
                         .simultaneousGesture(LongPressGesture(minimumDuration: 0.2).onEnded { _ in
                             self.isLongPressingPlus = true
                             self.timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { _ in
-                                addOne()
+                                if info.startingNum != endNumber - 1 {
+                                    addOne()
+                                }
                             })
                         })
                     }

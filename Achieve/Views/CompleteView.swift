@@ -38,6 +38,7 @@ struct CompleteView: View {
             smallGoalView(info: goalInfo)
             
             Button(action: {
+                goalInfo.isCompleted = false
                 self.presentationMode.wrappedValue.dismiss()
             }) {
                 Text("Undo Goal Completion")
@@ -47,15 +48,18 @@ struct CompleteView: View {
             
             Button(action: {
                 goalInfo.isCompleted = true
+                goalInfo.startingNum = 0
                 if bottomTextType != 1 && bottomTextType != 2 && bottomTextType != 3 {
                     goalInfo.timesCompleted += 1
                 }
-                goalInfo.startingNum = 0
                 screenInfo.refresh.toggle()
                 
                 for completedGoal in screenInfo.completedGoalsArray {
                     if goalInfo.title == completedGoal.title && goalInfo.goalSpecs.goalAmount == completedGoal.goalSpecs.goalAmount && goalInfo.displayTitle == completedGoal.displayTitle && goalInfo.goalSpecs.selfDirected == completedGoal.goalSpecs.selfDirected && goalInfo.accentColor == completedGoal.accentColor && goalInfo.backgroundColor == completedGoal.backgroundColor {
                         completedGoal.timesCompleted += 1
+                        if screenInfo.activeGoalsArray.count-1 <= 0 {
+                            return
+                        }
                         for index in 0...screenInfo.activeGoalsArray.count-1 {
                             if screenInfo.activeGoalsArray[index].isCompleted {
                                 screenInfo.activeGoalsArray.remove(at: index)
