@@ -57,8 +57,16 @@ struct CompleteView: View {
                 for completedGoal in screenInfo.completedGoalsArray {
                     if goalInfo.title == completedGoal.title && goalInfo.goalSpecs.goalAmount == completedGoal.goalSpecs.goalAmount && goalInfo.displayTitle == completedGoal.displayTitle && goalInfo.goalSpecs.selfDirected == completedGoal.goalSpecs.selfDirected && goalInfo.accentColor == completedGoal.accentColor && goalInfo.backgroundColor == completedGoal.backgroundColor {
                         completedGoal.timesCompleted += 1
-                        if screenInfo.activeGoalsArray.count-1 <= 0 {
-                            return
+                        if screenInfo.activeGoalsArray.count == 1 {
+                            if screenInfo.activeGoalsArray[0].isCompleted {
+                                screenInfo.activeGoalsArray.remove(at: 0)
+                                screenInfo.catagoryScores = catagoryPrecedence(screenInfo.activeGoalsArray)
+                                screenInfo.progressionEnd = currentProgressTotal(screenInfo.activeGoalsArray)
+                                screenInfo.progressionStart = currentProgressStart(screenInfo.activeGoalsArray)
+                                screenInfo.showingGoalCompleted = false
+                                self.presentationMode.wrappedValue.dismiss()
+                                return
+                            }
                         }
                         for index in 0...screenInfo.activeGoalsArray.count-1 {
                             if screenInfo.activeGoalsArray[index].isCompleted {
@@ -73,7 +81,18 @@ struct CompleteView: View {
                         }
                     }
                 }
-                
+                if screenInfo.activeGoalsArray.count == 1 {
+                    if screenInfo.activeGoalsArray[0].isCompleted {
+                        screenInfo.completedGoalsArray.append(screenInfo.activeGoalsArray[0])
+                        screenInfo.activeGoalsArray.remove(at: 0)
+                        screenInfo.catagoryScores = catagoryPrecedence(screenInfo.activeGoalsArray)
+                        screenInfo.progressionEnd = currentProgressTotal(screenInfo.activeGoalsArray)
+                        screenInfo.progressionStart = currentProgressStart(screenInfo.activeGoalsArray)
+                        screenInfo.showingGoalCompleted = false
+                        self.presentationMode.wrappedValue.dismiss()
+                        return
+                    }
+                }
                 for index in 0...screenInfo.activeGoalsArray.count-1 {
                     if screenInfo.activeGoalsArray[index].isCompleted {
                         screenInfo.completedGoalsArray.append(screenInfo.activeGoalsArray[index])
@@ -83,7 +102,7 @@ struct CompleteView: View {
                         screenInfo.progressionStart = currentProgressStart(screenInfo.activeGoalsArray)
                         screenInfo.showingGoalCompleted = false
                         self.presentationMode.wrappedValue.dismiss()
-                        break
+                        return
                     }
                 }
             }) {
