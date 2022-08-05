@@ -230,7 +230,7 @@ func findValuesInTitle (_ title: String) -> possibleValues {
         for number in numbersInTitle {
             for possibleTimeframe in timeframeArray {
                 if titleArray[titleArray.count - 1] != "\(number.foundNumber)" {
-                    if titleArray.count > 3 && number.relatedIndex + 1 < titleArray.count-1 {
+                    if titleArray.count > 3 && number.relatedIndex + 1 <= titleArray.count-1 {
                         if titleArray[number.relatedIndex + 1] == possibleTimeframe.phrase {
                             values.pTimeframeAmount = number.foundNumber
                             values.pTimeframeType = possibleTimeframe.relation

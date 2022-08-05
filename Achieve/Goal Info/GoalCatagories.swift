@@ -11,7 +11,6 @@ enum GoalCatagory {
     case health
     case education
     case financial
-    case relations
     case personal
     case social
     case lifestyle
@@ -25,8 +24,6 @@ enum GoalCatagory {
                 return "Education"
             case .financial:
                 return "Financial"
-            case .relations:
-                return "Relations"
             case .personal:
                 return "Personal"
             case .social:
@@ -46,8 +43,6 @@ enum GoalCatagory {
                 return Image(systemName: "lightbulb.fill")
             case .financial:
                 return Image(systemName: "dollarsign.circle.fill")
-            case .relations:
-                return Image(systemName: "person.2.circle.fill")
             case .personal:
                 return Image(systemName: "person.fill")
             case .social:
@@ -66,13 +61,11 @@ enum GoalCatagory {
             case .education:
                 return .yellow
             case .financial:
-                return .black
-            case .relations:
-                return .orange
+                return .green
             case .personal:
                 return .purple
             case .social:
-                return .green
+                return .orange
             case .lifestyle:
                 return .blue
             case .othercat:

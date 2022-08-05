@@ -27,16 +27,12 @@ let financialWords: [String] = [
 "financial", "money", "cash", "savings", "save", "bank", "funds", "stock", "invest", "investing", "dollars"
 ]
 
-let relationsWords: [String] = [
-"friends", "friend", "family", "mom", "dad", "brother", "sister", "love", "help", "understand", "partner", "girlfriend", "boyfriend", "wife", "husband"
-]
-
 let personalWords: [String] = [
 "mental", "stress", "self", "inner", "within", "improve", "better", "find"
 ]
 
 let socialWords: [String] = [
-"friendly", "friends", "friend", "listen", "confident", "talk", "meet", "people"
+"friendly", "friends", "friend", "listen", "confident", "talk", "meet", "people", "family", "mom", "dad", "brother", "sister", "love", "help", "understand", "partner", "girlfriend", "boyfriend", "wife", "husband"
 ]
 
 let lifestyleWords: [String] = [
@@ -47,7 +43,6 @@ var catagoryWordArray: [titleToCatagoryRelation] = [
     titleToCatagoryRelation(relationWords: healthWords, goal: .health),
     titleToCatagoryRelation(relationWords: educationWords, goal: .education),
     titleToCatagoryRelation(relationWords: financialWords, goal: .financial),
-    titleToCatagoryRelation(relationWords: relationsWords, goal: .relations),
     titleToCatagoryRelation(relationWords: personalWords, goal: .personal),
     titleToCatagoryRelation(relationWords: socialWords, goal: .social),
     titleToCatagoryRelation(relationWords: lifestyleWords, goal: .lifestyle)

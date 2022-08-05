@@ -81,6 +81,7 @@ struct CatagoryCreateView: View {
                         Button {
                             dropDownOpen.toggle()
                             catagoryError = false
+                            enableDirection = false
                         } label: {
                             if dropDownOpen == false {
                                 Text("\(Image(systemName: "chevron.right"))")
@@ -164,7 +165,7 @@ struct CatagoryCreateView: View {
                             .padding(.bottom, 1)
                             .fixedSize(horizontal: false, vertical: true)
                                             
-                        if enableDirection {
+                        if enableDirection && dropDownOpen == false {
                             ZStack {
                                 if goalInfo.catagory != nil && goalInfo.catagory != .othercat {
                                     RoundedRectangle(cornerRadius: 25)
@@ -257,10 +258,12 @@ struct CatagoryCreateView: View {
 
 struct CatagoryCreateView_Previews: PreviewProvider {
     static let goalInfo = newGoalInfo()
+    static let screenInfo = goalScreenInfo()
     static var previews: some View {
         NavigationView {
             CatagoryCreateView()
         }
         .environmentObject(goalInfo)
+        .environmentObject(screenInfo)
     }
 }

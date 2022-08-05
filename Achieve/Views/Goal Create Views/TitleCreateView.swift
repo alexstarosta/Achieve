@@ -165,10 +165,12 @@ struct TitleCreateView: View {
 
 struct TitleCreateView_Previews: PreviewProvider {
     static let goalInfo = newGoalInfo()
+    static let screenInfo = goalScreenInfo()
     static var previews: some View {
         NavigationView {
             TitleCreateView()
         }
         .environmentObject(goalInfo)
+        .environmentObject(screenInfo)
     }
 }

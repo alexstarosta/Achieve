@@ -9,7 +9,6 @@ import Foundation
 
 struct preSpecs {
     var selectedAmountSpec: Int = -1
-
     var selfDirected: Bool = false
 }
 
@@ -55,14 +54,6 @@ let financialRecs: [goalWithInfo] = [
     goalWithInfo(goal: "Buy a new car", canDaily: true, specs: preSpecs(selfDirected: true))
 ]
 
-let relationsRecs: [goalWithInfo] = [
-    goalWithInfo(goal: "Spend more time with family", canDaily: true, specs: preSpecs(selfDirected: true)),
-    goalWithInfo(goal: "Talk to friends", canDaily: true, specs: preSpecs(selfDirected: true)),
-    goalWithInfo(goal: "Make X new friends", canDaily: true, specs: preSpecs(selectedAmountSpec: 1)),
-    goalWithInfo(goal: "Spend time significant other", canDaily: true, specs: preSpecs(selfDirected: true)),
-    goalWithInfo(goal: "Get a gift for someone", canDaily: false, specs: preSpecs(selfDirected: true))
-]
-
 let personalRecs: [goalWithInfo] = [
     goalWithInfo(goal: "Learn to cook", canDaily: false, specs: preSpecs(selfDirected: true)),
     goalWithInfo(goal: "Stress less", canDaily: true, specs: preSpecs(selfDirected: true)),
@@ -76,7 +67,12 @@ let socialRecs: [goalWithInfo] = [
     goalWithInfo(goal: "Become more confident", canDaily: false, specs: preSpecs(selfDirected: true)),
     goalWithInfo(goal: "Do something for a friend", canDaily: false, specs: preSpecs(selfDirected: true)),
     goalWithInfo(goal: "Go hang out X times", canDaily: true, specs: preSpecs(selectedAmountSpec: 1)),
-    goalWithInfo(goal: "Prepair for upcoming event", canDaily: false, specs: preSpecs(selfDirected: true))
+    goalWithInfo(goal: "Prepair for upcoming event", canDaily: false, specs: preSpecs(selfDirected: true)),
+    goalWithInfo(goal: "Spend more time with family", canDaily: true, specs: preSpecs(selfDirected: true)),
+    goalWithInfo(goal: "Talk to friends", canDaily: true, specs: preSpecs(selfDirected: true)),
+    goalWithInfo(goal: "Make X new friends", canDaily: true, specs: preSpecs(selectedAmountSpec: 1)),
+    goalWithInfo(goal: "Spend time significant other", canDaily: true, specs: preSpecs(selfDirected: true)),
+    goalWithInfo(goal: "Get a gift for someone", canDaily: false, specs: preSpecs(selfDirected: true))
 ]
 
 let lifestyleRecs: [goalWithInfo] = [
@@ -91,7 +87,6 @@ var catagoryRecsArray: [recGoals] = [
     recGoals(recGoals: healthRecs, goalCatagory: .health),
     recGoals(recGoals: educationRecs, goalCatagory: .education),
     recGoals(recGoals: financialRecs, goalCatagory: .financial),
-    recGoals(recGoals: relationsRecs, goalCatagory: .relations),
     recGoals(recGoals: personalRecs, goalCatagory: .personal),
     recGoals(recGoals: socialRecs, goalCatagory: .social),
     recGoals(recGoals: lifestyleRecs, goalCatagory: .lifestyle)

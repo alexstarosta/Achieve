@@ -43,8 +43,6 @@ func catagoryPrecedence(_ activeGoals:[newGoalInfo]) -> [Double] {
                 educationScore += 1
             case .financial:
                 financialScore += 1
-            case .relations:
-                relationsScore += 1
             case .personal:
                 personalScore += 1
             case .social:
