@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum GoalCatagory {
+enum GoalCatagory : CaseIterable {
     case health
     case education
     case financial

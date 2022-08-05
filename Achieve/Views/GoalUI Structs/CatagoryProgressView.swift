@@ -10,7 +10,6 @@ import SwiftUI
 struct CatagoryProgressView: View {
     
     let values: [Double]
-    let colors = [Color.red, Color.yellow, Color.black, Color.orange, Color.purple, Color.green, Color.blue, Color.gray ]
     let screenWidth = UIScreen.main.bounds.size.width
     
     var body: some View {
@@ -19,7 +18,7 @@ struct CatagoryProgressView: View {
                 
                 Rectangle()
                     .frame(width: CGFloat(screenWidth*0.34)*values[index], height: 8, alignment: .leading)
-                    .foregroundColor(colors[index])
+                    .foregroundColor(GoalCatagory.allCases[index].color)
                     .cornerRadius(20)
                     .offset(x: 0, y: 30)
                     .frame(alignment: .leading)
