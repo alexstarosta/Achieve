@@ -63,10 +63,6 @@ func catagoryPrecedence(_ activeGoals:[newGoalInfo]) -> [Double] {
 
 struct GoalsView: View {
     
-    let screenWidth = UIScreen.main.bounds.size.width
-    let screenHeight = UIScreen.main.bounds.size.height
-    let screenSize = UIScreen.main.bounds.size
-    
     @EnvironmentObject var screenInfo: goalScreenInfo
 
     @State var showingCreateSequence = false

@@ -8,11 +8,7 @@
 import SwiftUI
 
 struct CompleteView: View {
-    
-    let screenWidth = UIScreen.main.bounds.size.width
-    let screenHeight = UIScreen.main.bounds.size.height
-    let screenSize = UIScreen.main.bounds.size
-    
+
     @EnvironmentObject var screenInfo: goalScreenInfo
     let goalInfo: newGoalInfo
     let bottomTextType: Int

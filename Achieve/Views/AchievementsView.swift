@@ -9,10 +9,6 @@ import SwiftUI
 
 struct AchievementsView: View {
     
-    let screenWidth = UIScreen.main.bounds.size.width
-    let screenHeight = UIScreen.main.bounds.size.height
-    let screenSize = UIScreen.main.bounds.size
-    
     @EnvironmentObject var screenInfo: goalScreenInfo
     
     var body: some View {
