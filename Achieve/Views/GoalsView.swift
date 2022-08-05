@@ -33,7 +33,7 @@ func currentProgressStart (_ activeGoals:[newGoalInfo] ) -> Double {
 }
 
 func catagoryPrecedence(_ activeGoals:[newGoalInfo]) -> [Double] {
-    var healthScore:Double = 0, educationScore:Double = 0, financialScore:Double = 0, relationsScore:Double = 0, personalScore:Double = 0, socialScore:Double = 0, lifestyleScore:Double = 0, othercatScore:Double = 0
+    var healthScore:Double = 0, educationScore:Double = 0, financialScore:Double = 0, personalScore:Double = 0, socialScore:Double = 0, lifestyleScore:Double = 0, othercatScore:Double = 0
     
     for goal in activeGoals {
         switch goal.catagory {
@@ -58,7 +58,7 @@ func catagoryPrecedence(_ activeGoals:[newGoalInfo]) -> [Double] {
     
     let totalGoals = Double(activeGoals.count)
     
-    return [healthScore/totalGoals, educationScore/totalGoals, financialScore/totalGoals, relationsScore/totalGoals, personalScore/totalGoals, socialScore/totalGoals, lifestyleScore/totalGoals, othercatScore/totalGoals]
+    return [healthScore/totalGoals, educationScore/totalGoals, financialScore/totalGoals, personalScore/totalGoals, socialScore/totalGoals, lifestyleScore/totalGoals, othercatScore/totalGoals]
 }
 
 struct GoalsView: View {

@@ -15,7 +15,7 @@ struct CatagoryProgressView: View {
     
     var body: some View {
         HStack(spacing: 0){
-            ForEach(0...7, id: \.self) {index in
+            ForEach(0...6, id: \.self) {index in
                 
                 Rectangle()
                     .frame(width: CGFloat(screenWidth*0.34)*values[index], height: 8, alignment: .leading)
