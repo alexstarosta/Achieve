@@ -7,14 +7,25 @@
 
 import SwiftUI
 
+let screenWidth = UIScreen.main.bounds.size.width
+let screenHeight = UIScreen.main.bounds.size.height
+let screenSize = UIScreen.main.bounds.size
+
 struct WelcomeView: View {
     
-    let screenWidth = UIScreen.main.bounds.size.width
-    let screenHeight = UIScreen.main.bounds.size.height
-    let screenSize = UIScreen.main.bounds.size
-    
     @EnvironmentObject var screenInfo: goalScreenInfo
-
+    
+    @State var titleOffset = -screenWidth
+    @State var titleLogoOffset = -screenWidth
+    
+    @State var tip1Offset = screenWidth
+    @State var tip2Offset = screenWidth
+    @State var tip3Offset = screenWidth
+    
+    @State var icon1Rotation = 0
+    @State var icon2Rotation = 0
+    @State var icon3Rotation = 0
+    
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
@@ -22,13 +33,19 @@ struct WelcomeView: View {
                         Text("Welcome to")
                             .multilineTextAlignment(.center)
                             .font(.largeTitle.bold())
-                            .offset(x: 0, y: 10)
+                            .offset(x: CGFloat(titleOffset), y: 10)
                             .padding(.top, 80)
+                            .onAppear {
+                                withAnimation(.spring().delay(0.75), {titleOffset = 0})
+                            }
                         
                             Image("achieveLogo")
                                 .scaleEffect(0.9)
                                 .padding(.bottom, 50)
-                                .offset(y: -10)
+                                .offset(x: CGFloat(titleLogoOffset), y: -10)
+                                .onAppear {
+                                    withAnimation(.spring().delay(0.85), {titleLogoOffset = 0})
+                                }
                         
                         VStack (spacing: 30) {
                             HStack (alignment: .center) {
@@ -36,6 +53,10 @@ struct WelcomeView: View {
                                     .font(.custom("", size: 40).bold())
                                     .foregroundColor(.accentColor)
                                     .padding(.trailing, 10)
+                                    .rotationEffect(.degrees(Double(icon1Rotation)))
+                                    .onAppear {
+                                        withAnimation(.spring().delay(1.35), {icon1Rotation = 360})
+                                    }
                                
                                 VStack (alignment: .leading) {
                                     Text("Customization")
@@ -49,12 +70,20 @@ struct WelcomeView: View {
                                 }
                             }
                             .padding(.bottom, 5)
+                            .offset(x: tip1Offset, y: 0)
+                            .onAppear {
+                                withAnimation(.spring().delay(1.25), {tip1Offset = 0})
+                            }
                             
                             HStack (alignment: .center) {
                                 Text("\(Image(systemName: "scope"))")
                                     .font(.custom("", size: 36).bold())
                                     .foregroundColor(.accentColor)
                                     .padding(.trailing, 10)
+                                    .rotationEffect(.degrees(Double(icon2Rotation)))
+                                    .onAppear {
+                                        withAnimation(.spring().delay(1.45), {icon2Rotation = 360})
+                                    }
                                
                                 VStack (alignment: .leading) {
                                     Text("Goal Tracking")
@@ -68,12 +97,20 @@ struct WelcomeView: View {
                                 }
                             }
                             .padding(.bottom, 2)
+                            .offset(x: tip2Offset, y: 0)
+                            .onAppear {
+                                withAnimation(.spring().delay(1.35), {tip2Offset = 0})
+                            }
                             
                             HStack (alignment: .center) {
                                 Text("\(Image(systemName: "hand.thumbsup"))")
                                     .font(.custom("", size: 40).bold())
                                     .foregroundColor(.accentColor)
                                     .padding(.trailing, 10)
+                                    .rotationEffect(.degrees(Double(icon3Rotation)))
+                                    .onAppear {
+                                        withAnimation(.spring().delay(1.55), {icon3Rotation = 360})
+                                    }
                                
                                 VStack (alignment: .leading) {
                                     Text("Live Recommendations")
@@ -85,6 +122,10 @@ struct WelcomeView: View {
                                         .opacity(0.75)
                                         .font(.body)
                                 }
+                            }
+                            .offset(x: tip3Offset, y: 0)
+                            .onAppear {
+                                withAnimation(.spring().delay(1.45), {tip3Offset = 0})
                             }
                             
                         }
@@ -109,7 +150,13 @@ struct WelcomeView: View {
 }
 
 struct GoalCreateWelcomeView_Previews: PreviewProvider {
+    static let goalInfo = newGoalInfo()
+    static let screenInfo = goalScreenInfo()
     static var previews: some View {
-        WelcomeView()
+        ZStack {
+            WelcomeView()
+        }
+        .environmentObject(goalInfo)
+        .environmentObject(screenInfo)
     }
 }
