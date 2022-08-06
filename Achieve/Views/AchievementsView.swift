@@ -50,8 +50,8 @@ struct AchievementsView: View {
                         }
                     } else {
                         ForEach((0...screenInfo.completedGoalsArray.count-1).reversed(), id: \.self) { index in
-                            if screenInfo.completedGoalsArray[index].isDeleted == false {
-                                smallCompletedGoalView(info: screenInfo.completedGoalsArray[index])
+                            if screenInfo.completedGoalsArray[index].state != .deleted {
+                                smallCompletedGoalView(goal: screenInfo.completedGoalsArray[index])
                             }
                         }
                     }
@@ -90,8 +90,8 @@ struct AchievementsView: View {
                         }
                     } else {
                         ForEach((0...screenInfo.deletedGoalsArray.count-1).reversed(), id: \.self) { index in
-                            if screenInfo.deletedGoalsArray[index].isDeleted == true {
-                                smallDeletedGoalView(info: screenInfo.deletedGoalsArray[index])
+                            if screenInfo.deletedGoalsArray[index].state == .deleted {
+                                smallDeletedGoalView(goal: screenInfo.deletedGoalsArray[index])
                             }
                         }
                     }

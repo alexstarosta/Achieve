@@ -9,11 +9,7 @@ import SwiftUI
 
 struct CustomizeCreateView: View {
     
-    let screenWidth = UIScreen.main.bounds.size.width
-    let screenHeight = UIScreen.main.bounds.size.height
-    let screenSize = UIScreen.main.bounds.size
-    
-    @EnvironmentObject var goalInfo: newGoalInfo
+    @EnvironmentObject var goal: Goal
     @EnvironmentObject var screenInfo: goalScreenInfo
     
     @State var selectedPicker = 1
@@ -36,56 +32,56 @@ struct CustomizeCreateView: View {
         return "NI"
     }
     
-    func whatAmount (_ goalinfo: newGoalInfo) -> Int {
-        if goalinfo.goalSpecs.selectedAmountSpec == 1 {
-            if goalinfo.goalSpecs.goalAmount != "" && onlyNumbers(goalinfo.goalSpecs.goalAmount){
-                return Int(goalinfo.goalSpecs.goalAmount)!
+    func whatAmount (_ goalinfo: Goal) -> Int {
+        if goal.goalInformation.selectedAmountSpec == 1 {
+            if goal.goalInformation.goalAmount != "" && onlyNumbers(goal.goalInformation.goalAmount){
+                return Int(goal.goalInformation.goalAmount)!
             }
-        } else if goalinfo.goalSpecs.selectedAmountSpec == 2 {
-            if goalinfo.goalSpecs.amountDurationAmount != "" && onlyNumbers(goalinfo.goalSpecs.amountDurationAmount){
-                return Int(goalinfo.goalSpecs.amountDurationAmount)!
+        } else if goal.goalInformation.selectedAmountSpec == 2 {
+            if goal.goalInformation.amountDurationAmount != "" && onlyNumbers(goal.goalInformation.amountDurationAmount){
+                return Int(goal.goalInformation.amountDurationAmount)!
             }
         }
         return -1
     }
     
-    func whatBottomText (_ goalinfo: newGoalInfo) -> String {
-        if goalinfo.goalSpecs.selfDirected == true { return "" }
-        if goalinfo.goalSpecs.selectedTimeSpec == 1 {
-            if goalinfo.goalSpecs.durationSpec == 1 && goalinfo.goalSpecs.durationAmount != "" && onlyNumbers(goalinfo.goalSpecs.durationAmount) {
-                if goalinfo.goalSpecs.scheduleType == 1 {
+    func whatBottomText (_ goalinfo: Goal) -> String {
+        if goal.goalInformation.selfDirected == true { return "" }
+        if goal.goalInformation.selectedTimeSpec == 1 {
+            if goal.goalInformation.durationSpec == 1 && goal.goalInformation.durationAmount != "" && onlyNumbers(goal.goalInformation.durationAmount) {
+                if goal.goalInformation.scheduleType == 1 {
                     return " Days Left"
-                } else if goalinfo.goalSpecs.scheduleType == 2 {
+                } else if goal.goalInformation.scheduleType == 2 {
                     return " Weeks Left"
-                } else if goalinfo.goalSpecs.scheduleType == 3 {
+                } else if goal.goalInformation.scheduleType == 3 {
                     return " Months Left"
                 }
             }
             return "Times Completed: "
-        } else if goalinfo.goalSpecs.selectedTimeSpec == 2 {
+        } else if goal.goalInformation.selectedTimeSpec == 2 {
             return "Finish Date: "
         }
         return ""
     }
     
-    func whatBottomTextType (_ goalinfo: newGoalInfo) -> Int {
-        if goalinfo.goalSpecs.selfDirected == true { return 0 }
-        if goalinfo.goalSpecs.selectedTimeSpec == 1 {
-            if goalinfo.goalSpecs.durationSpec == 1 && goalinfo.goalSpecs.durationAmount != "" && onlyNumbers(goalinfo.goalSpecs.durationAmount) {
+    func whatBottomTextType (_ goalinfo: Goal) -> Int {
+        if goal.goalInformation.selfDirected == true { return 0 }
+        if goal.goalInformation.selectedTimeSpec == 1 {
+            if goal.goalInformation.durationSpec == 1 && goal.goalInformation.durationAmount != "" && onlyNumbers(goal.goalInformation.durationAmount) {
                 return 1
             }
             return 2
-        } else if goalinfo.goalSpecs.selectedTimeSpec == 2 {
+        } else if goal.goalInformation.selectedTimeSpec == 2 {
             return 3
         }
         return 0
     }
     
-    func isProgressNeeded (_ goalinfo: newGoalInfo) -> Bool {
-        if goalinfo.goalSpecs.selectedAmountSpec == 3{
+    func isProgressNeeded (_ goalinfo: Goal) -> Bool {
+        if goal.goalInformation.selectedAmountSpec == 3{
             return false
         }
-        if goalinfo.goalSpecs.selfDirected {
+        if goal.goalInformation.selfDirected {
             return false
         }
         return true
@@ -109,29 +105,29 @@ struct CustomizeCreateView: View {
                 RoundedRectangle(cornerRadius: 25, style: .circular)
                     .frame(width: screenWidth*0.425*2.125, height: screenWidth*0.425, alignment: .leading)
                     .padding(.bottom, 10)
-                    .foregroundColor(goalInfo.backgroundColor.opacity(0.2))
+                    .foregroundColor(goal.backgroundColor.opacity(0.2))
                     .foregroundStyle(.ultraThinMaterial)
                 
                 HStack{
                     ZStack{
                         RoundedRectangle(cornerRadius: 10)
                             .frame(width: 60, height: 60, alignment: .leading)
-                            .foregroundColor(goalInfo.accentColor.opacity(0.2))
+                            .foregroundColor(goal.accentColor.opacity(0.2))
                             .foregroundStyle(.ultraThinMaterial)
                         
-                        Text("\(goalInfo.catagory?.symbol ?? Image(systemName: "flag.fill"))")
+                        Text("\(goal.catagory?.symbol ?? Image(systemName: "flag.fill"))")
                             .scaleEffect(1.8)
-                            .foregroundColor(goalInfo.accentColor)
+                            .foregroundColor(goal.accentColor)
                     }
                     .padding(.trailing, 15)
                     
-                    if goalInfo.displayTitle == "" {
-                        Text("\(goalInfo.title)")
+                    if goal.displayTitle == "" {
+                        Text("\(goal.title)")
                             .font(.body.bold())
                             .frame(width: 190, alignment: .topLeading)
                             .frame(minHeight: 20, idealHeight: 20, maxHeight: 50, alignment: .leading)
                     } else {
-                        Text("\(goalInfo.displayTitle)")
+                        Text("\(goal.displayTitle)")
                             .font(.body.bold())
                             .frame(width: 190, alignment: .topLeading)
                             .frame(minHeight: 20, idealHeight: 20, maxHeight: 50, alignment: .leading)
@@ -141,7 +137,7 @@ struct CustomizeCreateView: View {
                     ZStack{
                         RoundedRectangle(cornerRadius: 22)
                             .frame(width: 20, height: 50, alignment: .bottom)
-                            .foregroundColor(goalInfo.accentColor.opacity(0.2))
+                            .foregroundColor(goal.accentColor.opacity(0.2))
                             .foregroundStyle(.ultraThinMaterial)
                         
                         Image(systemName: "ellipsis")
@@ -153,17 +149,17 @@ struct CustomizeCreateView: View {
                 .frame(width: screenWidth*0.4*2)
                 
                 ProgressView(
-                    info: goalInfo,
+                    goal: goal,
                     startNumber: exampleStarting,
-                    endNumber: whatAmount(goalInfo),
-                    isProgress: isProgressNeeded(goalInfo),
-                    accentColor: goalInfo.accentColor,
-                    backgroundColor: goalInfo.backgroundColor,
-                    isIncremented: goalInfo.goalSpecs.isGoalIncrement == 1 ? true : false,
-                    incrementAmount: Int(goalInfo.goalSpecs.goalIncrement) ?? 0,
-                    bottomText: whatBottomText(goalInfo),
-                    bottomTextType: whatBottomTextType(goalInfo),
-                    finishDate: goalInfo.goalSpecs.finishDate
+                    endNumber: whatAmount(goal),
+                    isProgress: isProgressNeeded(goal),
+                    accentColor: goal.accentColor,
+                    backgroundColor: goal.backgroundColor,
+                    isIncremented: goal.goalInformation.isGoalIncrement == 1 ? true : false,
+                    incrementAmount: Int(goal.goalInformation.goalIncrement) ?? 0,
+                    bottomText: whatBottomText(goal),
+                    bottomTextType: whatBottomTextType(goal),
+                    finishDate: goal.goalInformation.finishDate
                 )
                 .offset(y: 25)
                 
@@ -173,7 +169,7 @@ struct CustomizeCreateView: View {
             VStack{
                 ZStack{
                     if selectedPicker != 0 {
-                        if goalInfo.accentColor != goalInfo.catagory?.color ?? .black || goalInfo.backgroundColor != Color.gray || goalInfo.displayTitle != "" {
+                        if goal.accentColor != goal.catagory?.color ?? .black || goal.backgroundColor != Color.gray || goal.displayTitle != "" {
                             ZStack{
                                 RoundedRectangle(cornerRadius: 22)
                                     .frame(width: 100, height: 60, alignment: .bottom)
@@ -190,14 +186,14 @@ struct CustomizeCreateView: View {
                             .onTapGesture {
                                 if selectedPicker == 1 {
                                     withAnimation(.easeOut) {
-                                        goalInfo.accentColor = goalInfo.catagory?.color ?? .black
-                                        goalInfo.backgroundColor = Color.gray
+                                        goal.accentColor = goal.catagory?.color ?? .black
+                                        goal.backgroundColor = Color.gray
                                     }
                                 } else if selectedPicker == 2 {
                                     
                                 } else if selectedPicker == 3 {
                                     withAnimation(.easeOut) {
-                                        goalInfo.displayTitle = ""
+                                        goal.displayTitle = ""
                                     }
                                 }
                             }
@@ -228,7 +224,7 @@ struct CustomizeCreateView: View {
                                         .bold()
                                 }
                                 
-                                ColorPicker("", selection: $goalInfo.accentColor, supportsOpacity: false)
+                                ColorPicker("", selection: $goal.accentColor, supportsOpacity: false)
                                     .padding(.top, 10)
                                     .labelsHidden()
                                     .scaleEffect(1.5)
@@ -244,7 +240,7 @@ struct CustomizeCreateView: View {
                                         .bold()
                                 }
                                 
-                                ColorPicker("", selection: $goalInfo.backgroundColor, supportsOpacity: false)
+                                ColorPicker("", selection: $goal.backgroundColor, supportsOpacity: false)
                                     .padding(.top, 10)
                                     .labelsHidden()
                                     .scaleEffect(1.5)
@@ -272,9 +268,9 @@ struct CustomizeCreateView: View {
                                 Text(Image(systemName: "highlighter"))
                                     .foregroundColor(.secondary)
                                 
-                                TextField("Title of your goal...", text: $goalInfo.displayTitle)
+                                TextField("Title of your goal...", text: $goal.displayTitle)
                                     .onSubmit {
-                                        let errorCheck = titleErrorCheck(goalInfo.displayTitle)
+                                        let errorCheck = titleErrorCheck(goal.displayTitle)
                                         if errorCheck != "NI" {
                                             displayError = true
                                             errorText = errorCheck
@@ -366,8 +362,9 @@ struct CustomizeCreateView: View {
             
             Button(action: {
                 if displayError == false {
-                goalInfo.currentlyCustom = false
-                screenInfo.activeGoalsArray.append(goalInfo)
+                    goal.state = .custom
+                    goal.state = .active
+                    screenInfo.activeGoalsArray.append(goal)
                 UIApplication.shared.windows.first?.rootViewController?.dismiss(animated: true)
                 screenInfo.firstTime = false
                 screenInfo.showWelcomeScreen = false
@@ -401,7 +398,7 @@ struct CustomizeCreateView: View {
 }
 
 struct CustomizeCreateView_Previews: PreviewProvider {
-    static let goalInfo = newGoalInfo()
+    static let goalInfo = Goal()
     static let screenInfo = goalScreenInfo()
     static var previews: some View {
         NavigationView {

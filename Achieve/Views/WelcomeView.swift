@@ -7,10 +7,6 @@
 
 import SwiftUI
 
-let screenWidth = UIScreen.main.bounds.size.width
-let screenHeight = UIScreen.main.bounds.size.height
-let screenSize = UIScreen.main.bounds.size
-
 struct WelcomeView: View {
     
     @EnvironmentObject var screenInfo: goalScreenInfo
@@ -150,13 +146,13 @@ struct WelcomeView: View {
 }
 
 struct GoalCreateWelcomeView_Previews: PreviewProvider {
-    static let goalInfo = newGoalInfo()
+    static let goal = Goal()
     static let screenInfo = goalScreenInfo()
     static var previews: some View {
         ZStack {
             WelcomeView()
         }
-        .environmentObject(goalInfo)
+        .environmentObject(goal)
         .environmentObject(screenInfo)
     }
 }

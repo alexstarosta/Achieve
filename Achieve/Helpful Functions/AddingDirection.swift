@@ -8,10 +8,10 @@
 import Foundation
 import SwiftUI
 
-func addDirectionalValues (_ title:String,_ catagory:GoalCatagory ,_ dIndex:Int) -> GoalSpecs {
+func addDirectionalValues (_ title:String,_ catagory:GoalCatagory ,_ dIndex:Int) -> GoalInformation {
     
     let titleInfo = findValuesInTitle(title)
-    let newSpecs = GoalSpecs()
+    let newSpecs = GoalInformation()
     
     if titleInfo.pReps != 0 {
         newSpecs.goalAmount = String(titleInfo.pReps)

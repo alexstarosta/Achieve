@@ -10,7 +10,7 @@ import SwiftUI
 struct CompleteView: View {
 
     @EnvironmentObject var screenInfo: goalScreenInfo
-    let goalInfo: newGoalInfo
+    let goal: Goal
     let bottomTextType: Int
 
     @Environment(\.presentationMode) var presentationMode
@@ -31,10 +31,10 @@ struct CompleteView: View {
                 .multilineTextAlignment(.center)
                 .font(.largeTitle.bold())
             
-            smallGoalView(info: goalInfo)
+            smallGoalView(goal: goal)
             
             Button(action: {
-                goalInfo.isCompleted = false
+                goal.state = .active
                 self.presentationMode.wrappedValue.dismiss()
             }) {
                 Text("Undo Goal Completion")
@@ -43,18 +43,18 @@ struct CompleteView: View {
             .frame(maxHeight: .infinity, alignment: .bottom)
             
             Button(action: {
-                goalInfo.isCompleted = true
-                goalInfo.startingNum = 0
+                goal.state = .completed
+                goal.extras.startingNum = 0
                 if bottomTextType != 1 && bottomTextType != 2 && bottomTextType != 3 {
-                    goalInfo.timesCompleted += 1
+                    goal.timesCompleted += 1
                 }
                 screenInfo.refresh.toggle()
                 
                 for completedGoal in screenInfo.completedGoalsArray {
-                    if goalInfo.title == completedGoal.title && goalInfo.goalSpecs.goalAmount == completedGoal.goalSpecs.goalAmount && goalInfo.displayTitle == completedGoal.displayTitle && goalInfo.goalSpecs.selfDirected == completedGoal.goalSpecs.selfDirected && goalInfo.accentColor == completedGoal.accentColor && goalInfo.backgroundColor == completedGoal.backgroundColor {
+                    if goal.title == completedGoal.title && goal.goalInformation.goalAmount == completedGoal.goalInformation.goalAmount && goal.displayTitle == completedGoal.displayTitle && goal.goalInformation.selfDirected == completedGoal.goalInformation.selfDirected && goal.accentColor == completedGoal.accentColor && goal.backgroundColor == completedGoal.backgroundColor {
                         completedGoal.timesCompleted += 1
                         if screenInfo.activeGoalsArray.count == 1 {
-                            if screenInfo.activeGoalsArray[0].isCompleted {
+                            if screenInfo.activeGoalsArray[0].state == .completed {
                                 screenInfo.activeGoalsArray.remove(at: 0)
                                 screenInfo.catagoryScores = catagoryPrecedence(screenInfo.activeGoalsArray)
                                 screenInfo.progressionEnd = currentProgressTotal(screenInfo.activeGoalsArray)
@@ -65,7 +65,7 @@ struct CompleteView: View {
                             }
                         }
                         for index in 0...screenInfo.activeGoalsArray.count-1 {
-                            if screenInfo.activeGoalsArray[index].isCompleted {
+                            if screenInfo.activeGoalsArray[0].state == .completed {
                                 screenInfo.activeGoalsArray.remove(at: index)
                                 screenInfo.catagoryScores = catagoryPrecedence(screenInfo.activeGoalsArray)
                                 screenInfo.progressionEnd = currentProgressTotal(screenInfo.activeGoalsArray)
@@ -78,7 +78,7 @@ struct CompleteView: View {
                     }
                 }
                 if screenInfo.activeGoalsArray.count == 1 {
-                    if screenInfo.activeGoalsArray[0].isCompleted {
+                    if screenInfo.activeGoalsArray[0].state == .completed {
                         screenInfo.completedGoalsArray.append(screenInfo.activeGoalsArray[0])
                         screenInfo.activeGoalsArray.remove(at: 0)
                         screenInfo.catagoryScores = catagoryPrecedence(screenInfo.activeGoalsArray)
@@ -90,7 +90,7 @@ struct CompleteView: View {
                     }
                 }
                 for index in 0...screenInfo.activeGoalsArray.count-1 {
-                    if screenInfo.activeGoalsArray[index].isCompleted {
+                    if screenInfo.activeGoalsArray[0].state == .completed{
                         screenInfo.completedGoalsArray.append(screenInfo.activeGoalsArray[index])
                         screenInfo.activeGoalsArray.remove(at: index)
                         screenInfo.catagoryScores = catagoryPrecedence(screenInfo.activeGoalsArray)
@@ -117,6 +117,6 @@ struct CompleteView: View {
 
 struct CompleteView_Previews: PreviewProvider {
     static var previews: some View {
-        CompleteView(goalInfo: newGoalInfo(), bottomTextType: 0)
+        CompleteView(goal: Goal(), bottomTextType: 0)
     }
 }

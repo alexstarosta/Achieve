@@ -7,24 +7,20 @@
 
 import SwiftUI
 
-let achieveStyleSimple = LinearGradient(gradient: Gradient(colors: [.accentColor, .achieveColorHeavy]), startPoint: .topLeading, endPoint: .bottomTrailing)
-
-let achieveStyleWhite = LinearGradient(gradient: Gradient(colors: [Color(UIColor.systemBackground)]), startPoint: .topLeading, endPoint: .bottomTrailing)
-
 func randomIcon() -> String{
     let randomInt = Int.random(in: 1..<10)
     
     switch randomInt {
-    case 1: return "figure.archery"
-    case 2: return "figure.climbing"
-    case 3: return "figure.core.training"
-    case 4: return "figure.curling"
-    case 5: return "figure.hiking"
-    case 6: return "figure.run"
-    case 7: return "figure.skiing.downhill"
-    case 8: return "figure.stairs"
-    case 9: return "figure.table.tennis"
-    default: return "figure.volleyball"
+        case 1: return "figure.archery"
+        case 2: return "figure.climbing"
+        case 3: return "figure.core.training"
+        case 4: return "figure.curling"
+        case 5: return "figure.hiking"
+        case 6: return "figure.run"
+        case 7: return "figure.skiing.downhill"
+        case 8: return "figure.stairs"
+        case 9: return "figure.table.tennis"
+        default: return "figure.volleyball"
     }
 }
 
@@ -46,13 +42,9 @@ func titleErrorCheck(_ title:String) -> String {
 
 struct TitleCreateView: View {
     
-    let screenWidth = UIScreen.main.bounds.size.width
-    let screenHeight = UIScreen.main.bounds.size.height
-    let screenSize = UIScreen.main.bounds.size
-    
     @State var topIcon = randomIcon()
     
-    @EnvironmentObject var goalInfo: newGoalInfo
+    @EnvironmentObject var goal: Goal
     @EnvironmentObject var screenInfo: goalScreenInfo
 
     @State var displayError = false
@@ -70,7 +62,7 @@ struct TitleCreateView: View {
                         .foregroundStyle(achieveStyleSimple)
                         .foregroundStyle(.ultraThinMaterial)
                     Image(topIcon)
-                        .scaleEffect(2)
+                        .scaleEffect(1.5)
                 }
                 
                 Text("Making a Goal")
@@ -98,9 +90,9 @@ struct TitleCreateView: View {
                         Text(Image(systemName: "highlighter"))
                             .foregroundColor(.secondary)
                         
-                        TextField("Title of your goal...", text: $goalInfo.title)
+                        TextField("Title of your goal...", text: $goal.title)
                             .onSubmit {
-                                let errorCheck = titleErrorCheck(goalInfo.title)
+                                let errorCheck = titleErrorCheck(goal.title)
                                 if errorCheck != "NI" {
                                     displayError = true
                                     errorText = errorCheck
@@ -128,14 +120,14 @@ struct TitleCreateView: View {
             .frame(width: screenWidth*0.85)
             
             Button(action: {
-                let errorCheck = titleErrorCheck(goalInfo.title)
+                let errorCheck = titleErrorCheck(goal.title)
                 if errorCheck != "NI" {
                     displayError = true
                     errorText = errorCheck
                 } else {
                     displayError = false
-                    if goalInfo.catagory != nil {
-                        goalInfo.directionsForUser = findDirectionsForUser(goalInfo.catagory!, goalInfo.title)
+                    if goal.catagory != nil {
+                        goal.extras.directionsForUser = findDirectionsForUser(goal.catagory!, goal.title)
                     }
                     sendNextView = true
                 }
@@ -164,13 +156,13 @@ struct TitleCreateView: View {
 
 
 struct TitleCreateView_Previews: PreviewProvider {
-    static let goalInfo = newGoalInfo()
+    static let goal = Goal()
     static let screenInfo = goalScreenInfo()
     static var previews: some View {
         NavigationView {
             TitleCreateView()
         }
-        .environmentObject(goalInfo)
+        .environmentObject(goal)
         .environmentObject(screenInfo)
     }
 }

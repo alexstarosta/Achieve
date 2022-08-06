@@ -7,12 +7,7 @@
 
 import SwiftUI
 
-extension Color {
-    static let achieveColorLight = Color("AchieveColorLight")
-    static let achieveColorHeavy = Color("AchieveColorHeavy")
-}
-
-func currentProgressTotal (_ activeGoals:[newGoalInfo] ) -> Double{
+func currentProgressTotal (_ activeGoals:[Goal] ) -> Double{
     var total: Double = 0
     for goal in activeGoals {
         if whatAmount(goal) != -1 {
@@ -22,17 +17,17 @@ func currentProgressTotal (_ activeGoals:[newGoalInfo] ) -> Double{
     return total
 }
 
-func currentProgressStart (_ activeGoals:[newGoalInfo] ) -> Double {
+func currentProgressStart (_ activeGoals:[Goal] ) -> Double {
     var total: Double = 0
     for goal in activeGoals {
         if whatAmount(goal) != -1 {
-            total += Double(goal.startingNum)
+            total += Double(goal.extras.startingNum)
         }
     }
     return total
 }
 
-func catagoryPrecedence(_ activeGoals:[newGoalInfo]) -> [Double] {
+func catagoryPrecedence(_ activeGoals:[Goal]) -> [Double] {
     var healthScore:Double = 0, educationScore:Double = 0, financialScore:Double = 0, personalScore:Double = 0, socialScore:Double = 0, lifestyleScore:Double = 0, othercatScore:Double = 0
     
     for goal in activeGoals {
@@ -167,8 +162,8 @@ struct GoalsView: View {
                     }
                     if screenInfo.activeGoalsArray.isEmpty == false {
                         ForEach(0...screenInfo.activeGoalsArray.count-1, id: \.self) { index in
-                            if screenInfo.activeGoalsArray[index].isDeleted == false {
-                                NewGoalView(info: screenInfo.activeGoalsArray[index])
+                            if screenInfo.activeGoalsArray[index].state != .deleted {
+                                NewGoalView(goal: screenInfo.activeGoalsArray[index])
                             }
                         }
                     }
@@ -181,9 +176,9 @@ struct GoalsView: View {
                         }
                         
                         ForEach(0...screenInfo.completedForToday.count-1, id: \.self) { index in
-                            if screenInfo.completedForToday[index].isDeleted == false {
+                            if screenInfo.completedForToday[index].state != .deleted  {
                                 withAnimation(.easeIn) {
-                                    NewGoalView(info: screenInfo.completedForToday[index])
+                                    NewGoalView(goal: screenInfo.completedForToday[index])
                                 }
                             }
                         }
@@ -196,7 +191,7 @@ struct GoalsView: View {
                     RootCreateView()
                 }
                 .sheet(isPresented: $screenInfo.showingGoalCompleted) {
-                    CompleteView(goalInfo: screenInfo.latestCompleteInfo, bottomTextType: screenInfo.latestCompleteTextType)
+                    CompleteView(goal: screenInfo.latestCompleteInfo, bottomTextType: screenInfo.latestCompleteTextType)
                 }
             }
             .navigationTitle("Goals")

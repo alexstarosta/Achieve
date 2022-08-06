@@ -12,7 +12,7 @@
 		43424B51289225C8006E1B8C /* AddingDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43424B50289225C8006E1B8C /* AddingDirection.swift */; };
 		4351AA11288F7D660028F79C /* SpecificationsCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4351AA10288F7D660028F79C /* SpecificationsCreateView.swift */; };
 		4356059B2890D67F00FD5FD7 /* FindDirections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4356059A2890D67F00FD5FD7 /* FindDirections.swift */; };
-		4356059D2890DD3100FD5FD7 /* GoalSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4356059C2890DD3100FD5FD7 /* GoalSpecs.swift */; };
+		4356059D2890DD3100FD5FD7 /* GoalInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4356059C2890DD3100FD5FD7 /* GoalInformation.swift */; };
 		436848DF2894B40300813294 /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436848DE2894B40300813294 /* ProgressView.swift */; };
 		436848E12894B45F00813294 /* NewGoalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436848E02894B45F00813294 /* NewGoalView.swift */; };
 		436848E32894B48800813294 /* CircularProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436848E22894B48800813294 /* CircularProgressView.swift */; };
@@ -33,6 +33,9 @@
 		43D0E715288CAE4E00C5192A /* TitleCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D0E714288CAE4E00C5192A /* TitleCreateView.swift */; };
 		43D0E719288DC25900C5192A /* CatagoryCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D0E718288DC25800C5192A /* CatagoryCreateView.swift */; };
 		43D0E71D288DC7C700C5192A /* RootCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D0E71C288DC7C700C5192A /* RootCreateView.swift */; };
+		43D76091289DB16D00CE0FB5 /* GoalStructure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D76090289DB16D00CE0FB5 /* GoalStructure.swift */; };
+		43D76093289DB20800CE0FB5 /* GoalStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D76092289DB20800CE0FB5 /* GoalStates.swift */; };
+		43D76097289DB7E400CE0FB5 /* Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D76096289DB7E400CE0FB5 /* Extentions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,7 +44,7 @@
 		43424B50289225C8006E1B8C /* AddingDirection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddingDirection.swift; sourceTree = "<group>"; };
 		4351AA10288F7D660028F79C /* SpecificationsCreateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecificationsCreateView.swift; sourceTree = "<group>"; };
 		4356059A2890D67F00FD5FD7 /* FindDirections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindDirections.swift; sourceTree = "<group>"; };
-		4356059C2890DD3100FD5FD7 /* GoalSpecs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalSpecs.swift; sourceTree = "<group>"; };
+		4356059C2890DD3100FD5FD7 /* GoalInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalInformation.swift; sourceTree = "<group>"; };
 		436848DE2894B40300813294 /* ProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
 		436848E02894B45F00813294 /* NewGoalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGoalView.swift; sourceTree = "<group>"; };
 		436848E22894B48800813294 /* CircularProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressView.swift; sourceTree = "<group>"; };
@@ -63,6 +66,9 @@
 		43D0E714288CAE4E00C5192A /* TitleCreateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleCreateView.swift; sourceTree = "<group>"; };
 		43D0E718288DC25800C5192A /* CatagoryCreateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatagoryCreateView.swift; sourceTree = "<group>"; };
 		43D0E71C288DC7C700C5192A /* RootCreateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootCreateView.swift; sourceTree = "<group>"; };
+		43D76090289DB16D00CE0FB5 /* GoalStructure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalStructure.swift; sourceTree = "<group>"; };
+		43D76092289DB20800CE0FB5 /* GoalStates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalStates.swift; sourceTree = "<group>"; };
+		43D76096289DB7E400CE0FB5 /* Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extentions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +115,7 @@
 			children = (
 				43B0629D288B5168008E7B2F /* AchieveApp.swift */,
 				43B0629F288B5168008E7B2F /* ContentView.swift */,
+				43D76096289DB7E400CE0FB5 /* Extentions.swift */,
 				43B062C3288B819A008E7B2F /* Goal Info */,
 				43B062C2288B8188008E7B2F /* Helpful Functions */,
 				43B062B7288B52BE008E7B2F /* Views */,
@@ -154,9 +161,11 @@
 		43B062C3288B819A008E7B2F /* Goal Info */ = {
 			isa = PBXGroup;
 			children = (
+				43D76090289DB16D00CE0FB5 /* GoalStructure.swift */,
 				43B062B8288B8050008E7B2F /* GoalCatagories.swift */,
 				43B062C0288B8163008E7B2F /* GoalRecommendations.swift */,
-				4356059C2890DD3100FD5FD7 /* GoalSpecs.swift */,
+				4356059C2890DD3100FD5FD7 /* GoalInformation.swift */,
+				43D76092289DB20800CE0FB5 /* GoalStates.swift */,
 			);
 			path = "Goal Info";
 			sourceTree = "<group>";
@@ -253,16 +262,18 @@
 				4356059B2890D67F00FD5FD7 /* FindDirections.swift in Sources */,
 				43D0E715288CAE4E00C5192A /* TitleCreateView.swift in Sources */,
 				43B062B4288B52A6008E7B2F /* AchievementsView.swift in Sources */,
+				43D76091289DB16D00CE0FB5 /* GoalStructure.swift in Sources */,
 				43B062B9288B8050008E7B2F /* GoalCatagories.swift in Sources */,
 				43B062B2288B5298008E7B2F /* GoalsView.swift in Sources */,
 				43B062A0288B5168008E7B2F /* ContentView.swift in Sources */,
 				436848E32894B48800813294 /* CircularProgressView.swift in Sources */,
+				43D76093289DB20800CE0FB5 /* GoalStates.swift in Sources */,
 				43B0629E288B5168008E7B2F /* AchieveApp.swift in Sources */,
 				43424B51289225C8006E1B8C /* AddingDirection.swift in Sources */,
 				436848E12894B45F00813294 /* NewGoalView.swift in Sources */,
 				433269B6289232A000BC3400 /* CustomizeCreateView.swift in Sources */,
 				436848E72894D70300813294 /* CatagoryProgressView.swift in Sources */,
-				4356059D2890DD3100FD5FD7 /* GoalSpecs.swift in Sources */,
+				4356059D2890DD3100FD5FD7 /* GoalInformation.swift in Sources */,
 				433CDDAA2895E97B0046EC6E /* CompleteView.swift in Sources */,
 				4351AA11288F7D660028F79C /* SpecificationsCreateView.swift in Sources */,
 				43B062BD288B80E4008E7B2F /* GoalTitleAnalyser.swift in Sources */,
@@ -270,6 +281,7 @@
 				436848E52894B4C800813294 /* SmallGoalViews.swift in Sources */,
 				43D0E719288DC25900C5192A /* CatagoryCreateView.swift in Sources */,
 				43B062BB288B8078008E7B2F /* PredictCatagory.swift in Sources */,
+				43D76097289DB7E400CE0FB5 /* Extentions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

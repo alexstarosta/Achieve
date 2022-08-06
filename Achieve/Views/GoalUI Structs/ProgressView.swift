@@ -11,7 +11,7 @@ struct ProgressView: View {
     
     @EnvironmentObject var screenInfo: goalScreenInfo
     
-    let info: newGoalInfo
+    let goal: Goal
     
     let screenWidth = UIScreen.main.bounds.size.width
     
@@ -36,20 +36,20 @@ struct ProgressView: View {
     
     func addOne() {
         
-        if info.greyOut == true { return }
+        if goal.state == .doneToday { return }
         
         if startNumber >= 0 && startNumber < endNumber {
             startNumber += 1
-            if info.currentlyCustom == false {
-                info.startingNum += 1
+            if goal.state != .custom {
+                goal.extras.startingNum += 1
                 screenInfo.progressionEnd = currentProgressTotal(screenInfo.activeGoalsArray)
                 screenInfo.progressionStart = currentProgressStart(screenInfo.activeGoalsArray)
             }
         }
-        if info.currentlyCustom != true {
+        if goal.state != .custom {
             if startNumber == endNumber {
-                if bottomTextType != 1 && bottomTextType != 2 && bottomTextType != 3 && info.isCompleted == false {
-                    info.startingNum = endNumber
+                if bottomTextType != 1 && bottomTextType != 2 && bottomTextType != 3 && goal.state != .completed {
+                    goal.extras.startingNum = endNumber
                     goalCompleted()
                 } else {
                     doneForToday()
@@ -60,12 +60,12 @@ struct ProgressView: View {
     
     func minusOne() {
         
-        if info.greyOut == true { return }
+        if goal.state == .doneToday { return }
         
         if startNumber >= 1 {
             startNumber -= 1
-            if info.currentlyCustom == false {
-                info.startingNum -= 1
+            if goal.state != .custom {
+                goal.extras.startingNum -= 1
                 screenInfo.progressionEnd = currentProgressTotal(screenInfo.activeGoalsArray)
                 screenInfo.progressionStart = currentProgressStart(screenInfo.activeGoalsArray)
             }
@@ -74,25 +74,25 @@ struct ProgressView: View {
     
     func goalCompleted() {
         
-        if info.greyOut == true { return }
+        if goal.state == .doneToday { return }
         
         if screenInfo.disableCompletion == false {
-            screenInfo.latestCompleteInfo = info
+            screenInfo.latestCompleteInfo = goal
             screenInfo.latestCompleteTextType = bottomTextType
             screenInfo.showingGoalCompleted = true
         } else {
-            info.isCompleted = true
+            goal.state = .completed
             if bottomTextType != 1 && bottomTextType != 2 && bottomTextType != 3 {
-                info.timesCompleted += 1
+                goal.timesCompleted += 1
             }
-            info.startingNum = 0
+            goal.extras.startingNum = 0
             screenInfo.refresh.toggle()
             
             for completedGoal in screenInfo.completedGoalsArray {
-                if info.title == completedGoal.title && info.goalSpecs.goalAmount == completedGoal.goalSpecs.goalAmount && info.displayTitle == completedGoal.displayTitle && info.goalSpecs.selfDirected == completedGoal.goalSpecs.selfDirected && info.accentColor == completedGoal.accentColor && info.backgroundColor == completedGoal.backgroundColor {
+                if goal.goalID == completedGoal.goalID {
                     completedGoal.timesCompleted += 1
                     for index in 0...screenInfo.activeGoalsArray.count-1 {
-                        if screenInfo.activeGoalsArray[index].isCompleted {
+                        if screenInfo.activeGoalsArray[index].state == .completed {
                             screenInfo.activeGoalsArray.remove(at: index)
                             screenInfo.catagoryScores = catagoryPrecedence(screenInfo.activeGoalsArray)
                             screenInfo.progressionEnd = currentProgressTotal(screenInfo.activeGoalsArray)
@@ -104,7 +104,7 @@ struct ProgressView: View {
             }
             
             for index in 0...screenInfo.activeGoalsArray.count-1 {
-                if screenInfo.activeGoalsArray[index].isCompleted {
+                if screenInfo.activeGoalsArray[index].state == .completed  {
                     screenInfo.completedGoalsArray.append(screenInfo.activeGoalsArray[index])
                     screenInfo.activeGoalsArray.remove(at: index)
                     screenInfo.catagoryScores = catagoryPrecedence(screenInfo.activeGoalsArray)
@@ -119,22 +119,29 @@ struct ProgressView: View {
     
     func doneForToday () {
         
-        if info.greyOut == true { return }
-        if info.currentlyCustom == true { return }
+        if goal.state == .custom { return }
         
-        info.greyOut = true
-        info.isDoneForToday = true
+        goal.state = .doneToday
         
         if bottomTextType == 1{
-            info.goalSpecs.durationAmount = ("\(Int(info.goalSpecs.durationAmount)! - 1)")
+            goal.goalInformation.durationAmount = ("\(Int(goal.goalInformation.durationAmount)! - 1)")
         } else if bottomTextType == 2{
-            info.timesCompleted += 1
+            goal.timesCompleted += 1
         }
         
-        if screenInfo.activeGoalsArray.count-1 <= 0 {return}
+        if screenInfo.activeGoalsArray.count-1 <= 0 {
+            if screenInfo.activeGoalsArray[0].state == .doneToday {
+                screenInfo.completedForToday.append(screenInfo.activeGoalsArray[0])
+                screenInfo.activeGoalsArray.remove(at: 0)
+                screenInfo.catagoryScores = catagoryPrecedence(screenInfo.activeGoalsArray)
+                screenInfo.progressionEnd = currentProgressTotal(screenInfo.activeGoalsArray)
+                screenInfo.progressionStart = currentProgressStart(screenInfo.activeGoalsArray)
+                return
+            }
+        }
         
         for index in 0...screenInfo.activeGoalsArray.count-1 {
-            if screenInfo.activeGoalsArray[index].isDoneForToday {
+            if screenInfo.activeGoalsArray[index].state == .doneToday {
                 screenInfo.completedForToday.append(screenInfo.activeGoalsArray[index])
                 screenInfo.activeGoalsArray.remove(at: index)
                 screenInfo.catagoryScores = catagoryPrecedence(screenInfo.activeGoalsArray)
@@ -153,9 +160,9 @@ struct ProgressView: View {
                     Text("\(startNumber)/\(endNumber)")
                     Spacer()
                     if bottomTextType == 1{
-                        Text(info.goalSpecs.durationAmount + "\(bottomText)")
+                        Text(goal.goalInformation.durationAmount + "\(bottomText)")
                     } else if bottomTextType == 2{
-                        Text("\(bottomText) \(info.timesCompleted)")
+                        Text("\(bottomText) \(goal.timesCompleted)")
                     } else if bottomTextType == 3{
                         Text("\(bottomText) \(finishDate!.formatted(date: .long, time: .omitted))")
                     } else {
@@ -167,9 +174,9 @@ struct ProgressView: View {
             } else {
                 HStack{
                     if bottomTextType == 1{
-                        Text(info.goalSpecs.durationAmount + "\(bottomText)")
+                        Text(goal.goalInformation.durationAmount + "\(bottomText)")
                     } else if bottomTextType == 2{
-                        Text("\(bottomText) \(info.timesCompleted)")
+                        Text("\(bottomText) \(goal.timesCompleted)")
                     } else if bottomTextType == 3{
                         Text("\(bottomText) \(finishDate!.formatted(date: .long, time: .omitted))")
                     } else {
@@ -268,7 +275,7 @@ struct ProgressView: View {
                         .simultaneousGesture(LongPressGesture(minimumDuration: 0.2).onEnded { _ in
                             self.isLongPressingPlus = true
                             self.timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { _ in
-                                if info.startingNum != endNumber - 1 {
+                                if goal.extras.startingNum != endNumber - 1 {
                                     addOne()
                                 }
                             })
@@ -302,7 +309,7 @@ struct ProgressView: View {
                 }
             }
             
-            if info.greyOut == true {
+            if goal.state == .doneToday {
                 RoundedRectangle(cornerRadius: 20)
                     .frame(width: screenWidth*0.4*2, height: 12)
                     .foregroundColor(Color.gray.opacity(0.5))

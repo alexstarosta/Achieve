@@ -9,17 +9,30 @@ import SwiftUI
 
 struct SpecificationsCreateView: View {
     
-    let screenWidth = UIScreen.main.bounds.size.width
-    let screenHeight = UIScreen.main.bounds.size.height
-    let screenSize = UIScreen.main.bounds.size
-    
-    @EnvironmentObject var goalInfo: newGoalInfo
+    @EnvironmentObject var goal: Goal
     @EnvironmentObject var screenInfo: goalScreenInfo
         
     @State var uiUpdate = false
     @State var sendNextView = false
     
     @FocusState private var keyboardActive: Bool
+    
+    @State var selectedPicker: Int
+    
+    @State var timeError1 = ""
+    @State var timeError2 = ""
+    
+    @State var amountError1 = ""
+    @State var amountError2 = ""
+    
+    @State var timeError1Selected = false
+    @State var timeError2Selected = false
+    
+    @State var amountError1Selected = false
+    @State var amountError2Selected = false
+    
+    @State var mainError = ""
+    @State var mainErrorSelected = false
     
     func isWhole (_ amount:String, _ inc:String) -> Bool {
         
@@ -44,38 +57,16 @@ struct SpecificationsCreateView: View {
         }
     }
     
-    @State var timeError1 = ""
-    @State var timeError2 = ""
-    
-    @State var amountError1 = ""
-    @State var amountError2 = ""
-    
-    @State var timeError1Selected = false
-    @State var timeError2Selected = false
-    
-    @State var amountError1Selected = false
-    @State var amountError2Selected = false
-    
-    @State var mainError = ""
-    @State var mainErrorSelected = false
-    
-    @State var noDrag = false
-    
     func mainErrorCheck() {
-        if goalInfo.goalSpecs.selfDirected == true {
+        if goal.goalInformation.selfDirected == true {
             return
         }
-        if goalInfo.selectedPicker == 0 {
-            mainError = "Click the buttons above to add specifications"
-            mainErrorSelected = true
-            return
-        }
-        if goalInfo.goalSpecs.selectedTimeSpec == -1 {
+        if goal.goalInformation.selectedTimeSpec == -1 {
             mainError = "Please select a time specification"
             mainErrorSelected = true
             return
         }
-        if goalInfo.goalSpecs.selectedAmountSpec == -1 {
+        if goal.goalInformation.selectedAmountSpec == -1 {
             mainError = "Please select an amount specification"
             mainErrorSelected = true
             return
@@ -92,24 +83,24 @@ struct SpecificationsCreateView: View {
             amountError2Selected = false
         }
         
-        if goalInfo.goalSpecs.selectedTimeSpec == 1 {
-            if goalInfo.goalSpecs.scheduleType == -1 {
+        if goal.goalInformation.selectedTimeSpec == 1 {
+            if goal.goalInformation.scheduleType == -1 {
                 timeError1 = "Please select a schedule"
                 timeError1Selected = true
-            } else if goalInfo.goalSpecs.durationSpec == -1 {
+            } else if goal.goalInformation.durationSpec == -1 {
                 timeError1 = "Please select a duration"
                 timeError1Selected = true
-            } else if goalInfo.goalSpecs.durationSpec == 1 && goalInfo.goalSpecs.durationAmount == "" {
+            } else if goal.goalInformation.durationSpec == 1 && goal.goalInformation.durationAmount == "" {
                 timeError1 = "Please specify how long the goal should last for"
                 timeError1Selected = true
-            } else if goalInfo.goalSpecs.durationSpec == 1 && goalInfo.goalSpecs.durationAmount != "" && onlyNumbers(goalInfo.goalSpecs.durationAmount) == false {
+            } else if goal.goalInformation.durationSpec == 1 && goal.goalInformation.durationAmount != "" && onlyNumbers(goal.goalInformation.durationAmount) == false {
                 timeError1 = "Please enter a number for duration length"
                 timeError1Selected = true
             }
-        } else if goalInfo.goalSpecs.selectedTimeSpec == 2 {
+        } else if goal.goalInformation.selectedTimeSpec == 2 {
             
             let calendar = Calendar.current
-            let goalDate = calendar.startOfDay(for: goalInfo.goalSpecs.finishDate)
+            let goalDate = calendar.startOfDay(for: goal.goalInformation.finishDate)
             let today = calendar.startOfDay(for: Date.now)
             let components = calendar.dateComponents([.day], from: today, to: goalDate)
             if components.day! <= 1 {
@@ -118,55 +109,55 @@ struct SpecificationsCreateView: View {
             }
         }
         
-        if goalInfo.goalSpecs.selectedAmountSpec == 1 {
-            if goalInfo.goalSpecs.goalAmount == "" {
+        if goal.goalInformation.selectedAmountSpec == 1 {
+            if goal.goalInformation.goalAmount == "" {
                 amountError1 = "Please specify the goal's amount"
                 amountError1Selected = true
-            } else if onlyNumbers(goalInfo.goalSpecs.goalAmount) == false {
+            } else if onlyNumbers(goal.goalInformation.goalAmount) == false {
                 amountError1 = "Please enter a number for goal amount"
                 amountError1Selected = true
-            } else if goalInfo.goalSpecs.isGoalIncrement == -1 {
+            } else if goal.goalInformation.isGoalIncrement == -1 {
                 amountError1 = "Please enter a specification for the increment"
                 amountError1Selected = true
-            } else if goalInfo.goalSpecs.isGoalIncrement == 1 && goalInfo.goalSpecs.goalIncrement == "" {
+            } else if goal.goalInformation.isGoalIncrement == 1 && goal.goalInformation.goalIncrement == "" {
                 amountError1 = "Please enter a goal increment"
                 amountError1Selected = true
-            } else if goalInfo.goalSpecs.isGoalIncrement == 1 && goalInfo.goalSpecs.goalIncrement != "" && onlyNumbers(goalInfo.goalSpecs.goalIncrement) == false {
+            } else if goal.goalInformation.isGoalIncrement == 1 && goal.goalInformation.goalIncrement != "" && onlyNumbers(goal.goalInformation.goalIncrement) == false {
                 amountError1 = "Please enter a number for goal increment"
                 amountError1Selected = true
-            } else if onlyNumbers(goalInfo.goalSpecs.goalIncrement) == true && onlyNumbers(goalInfo.goalSpecs.goalIncrement) == true && goalInfo.goalSpecs.isGoalIncrement == 1{
-                if isWhole(goalInfo.goalSpecs.goalAmount, goalInfo.goalSpecs.goalIncrement) == false {
+            } else if onlyNumbers(goal.goalInformation.goalIncrement) == true && onlyNumbers(goal.goalInformation.goalIncrement) == true && goal.goalInformation.isGoalIncrement == 1{
+                if isWhole(goal.goalInformation.goalAmount, goal.goalInformation.goalIncrement) == false {
                 amountError1 = "Goal increment must be a divisor of the amount"
                 amountError1Selected = true
                 }
             }
-        } else if goalInfo.goalSpecs.selectedAmountSpec == 2 {
-            if goalInfo.goalSpecs.amountDurationType == -1 {
+        } else if goal.goalInformation.selectedAmountSpec == 2 {
+            if goal.goalInformation.amountDurationType == -1 {
                 amountError2 = "Please enter a duration type"
                 amountError2Selected = true
-            } else if goalInfo.goalSpecs.amountDurationType != -1 && goalInfo.goalSpecs.amountDurationAmount == ""{
+            } else if goal.goalInformation.amountDurationType != -1 && goal.goalInformation.amountDurationAmount == ""{
                 amountError2 = "Please enter a duration amount"
                 amountError2Selected = true
-            } else if goalInfo.goalSpecs.amountDurationType != -1 && goalInfo.goalSpecs.amountDurationAmount != "" && onlyNumbers(goalInfo.goalSpecs.amountDurationAmount) == false {
+            } else if goal.goalInformation.amountDurationType != -1 && goal.goalInformation.amountDurationAmount != "" && onlyNumbers(goal.goalInformation.amountDurationAmount) == false {
                 
                 amountError2 = "Please enter a number for duration amount"
                 amountError2Selected = true
-            } else if onlyNumbers(goalInfo.goalSpecs.amountDurationAmount) == false {
-                if goalInfo.goalSpecs.amountDurationType == 1 && Int(goalInfo.goalSpecs.amountDurationAmount)! > 60 {
+            } else if onlyNumbers(goal.goalInformation.amountDurationAmount) == false {
+                if goal.goalInformation.amountDurationType == 1 && Int(goal.goalInformation.amountDurationAmount)! > 60 {
                     amountError2 = "Please enter a valid duration amount"
                     amountError2Selected = true
                 }
-                if goalInfo.goalSpecs.amountDurationType == 2 && Int(goalInfo.goalSpecs.amountDurationAmount)! > 12 {
+                if goal.goalInformation.amountDurationType == 2 && Int(goal.goalInformation.amountDurationAmount)! > 12 {
                     amountError2 = "Please enter a valid duration amount"
                     amountError2Selected = true
                 }
-                if goalInfo.goalSpecs.amountDurationType == 3 && Int(goalInfo.goalSpecs.amountDurationAmount)! > 4 {
+                if goal.goalInformation.amountDurationType == 3 && Int(goal.goalInformation.amountDurationAmount)! > 4 {
                     amountError2 = "Please enter a valid duration amount"
                     amountError2Selected = true
                 }
             }
         }
-        if goalInfo.goalSpecs.selfDirected == true {
+        if goal.goalInformation.selfDirected == true {
             timeError1 = ""
             timeError2 = ""
             
@@ -204,17 +195,17 @@ struct SpecificationsCreateView: View {
                             .frame(width: 70, height: 70)
                         
                         Circle()
-                            .foregroundStyle (goalInfo.selectedPicker == 1 ? LinearGradient(gradient: Gradient(colors: [.accentColor, .achieveColorHeavy]), startPoint: .topLeading, endPoint: .bottomTrailing) : LinearGradient(colors: [Color(UIColor.systemBackground)], startPoint: .bottom, endPoint: .bottom))
+                            .foregroundStyle (selectedPicker == 1 ? LinearGradient(gradient: Gradient(colors: [.accentColor, .achieveColorHeavy]), startPoint: .topLeading, endPoint: .bottomTrailing) : LinearGradient(colors: [Color(UIColor.systemBackground)], startPoint: .bottom, endPoint: .bottom))
                             .frame(width: 64, height: 64)
                         
                         Image(systemName: "clock.fill")
                             .scaleEffect(2)
-                            .foregroundStyle (goalInfo.selectedPicker != 1 ? LinearGradient(gradient: Gradient(colors: [.accentColor, .achieveColorHeavy]), startPoint: .topLeading, endPoint: .bottomTrailing) : LinearGradient(colors: [Color(UIColor.systemBackground)], startPoint: .bottom, endPoint: .bottom))
+                            .foregroundStyle (selectedPicker != 1 ? LinearGradient(gradient: Gradient(colors: [.accentColor, .achieveColorHeavy]), startPoint: .topLeading, endPoint: .bottomTrailing) : LinearGradient(colors: [Color(UIColor.systemBackground)], startPoint: .bottom, endPoint: .bottom))
                         
                         Circle()
                             .foregroundColor(.black)
                             .frame(width: 70, height: 70)
-                            .opacity(goalInfo.goalSpecs.selfDirected ? 0.2 : 0)
+                            .opacity(goal.goalInformation.selfDirected ? 0.2 : 0)
                         
                         if timeError1Selected || timeError2Selected {
                             
@@ -233,8 +224,8 @@ struct SpecificationsCreateView: View {
                         
                     }
                     .onTapGesture {
-                        withAnimation(.easeIn) { goalInfo.selectedPicker = 1}
-                        withAnimation(.easeIn) { goalInfo.goalSpecs.selfDirected = false}
+                        withAnimation(.easeIn) { selectedPicker = 1}
+                        withAnimation(.easeIn) { goal.goalInformation.selfDirected = false}
                         withAnimation(.easeOut) { mainErrorSelected = false }
                     }
                     
@@ -244,17 +235,17 @@ struct SpecificationsCreateView: View {
                             .frame(width: 70, height: 70)
                         
                         Circle()
-                            .foregroundStyle (goalInfo.selectedPicker == 2 ? LinearGradient(gradient: Gradient(colors: [.accentColor, .achieveColorHeavy]), startPoint: .topLeading, endPoint: .bottomTrailing) : LinearGradient(colors: [Color(UIColor.systemBackground)], startPoint: .bottom, endPoint: .bottom))
+                            .foregroundStyle (selectedPicker == 2 ? LinearGradient(gradient: Gradient(colors: [.accentColor, .achieveColorHeavy]), startPoint: .topLeading, endPoint: .bottomTrailing) : LinearGradient(colors: [Color(UIColor.systemBackground)], startPoint: .bottom, endPoint: .bottom))
                             .frame(width: 64, height: 64)
                         
                         Image(systemName: "number.circle.fill")
                             .scaleEffect(2.5)
-                            .foregroundStyle (goalInfo.selectedPicker != 2 ? LinearGradient(gradient: Gradient(colors: [.accentColor, .achieveColorHeavy]), startPoint: .topLeading, endPoint: .bottomTrailing) : LinearGradient(colors: [Color(UIColor.systemBackground)], startPoint: .bottom, endPoint: .bottom))
+                            .foregroundStyle (selectedPicker != 2 ? LinearGradient(gradient: Gradient(colors: [.accentColor, .achieveColorHeavy]), startPoint: .topLeading, endPoint: .bottomTrailing) : LinearGradient(colors: [Color(UIColor.systemBackground)], startPoint: .bottom, endPoint: .bottom))
                         
                         Circle()
                             .foregroundColor(.black)
                             .frame(width: 70, height: 70)
-                            .opacity(goalInfo.goalSpecs.selfDirected ? 0.2 : 0)
+                            .opacity(goal.goalInformation.selfDirected ? 0.2 : 0)
                         
                         if amountError1Selected || amountError2Selected {
                             
@@ -274,8 +265,8 @@ struct SpecificationsCreateView: View {
                         
                     }
                     .onTapGesture {
-                        withAnimation(.easeIn) { goalInfo.selectedPicker = 2 }
-                        withAnimation(.easeIn) { goalInfo.goalSpecs.selfDirected = false}
+                        withAnimation(.easeIn) { selectedPicker = 2 }
+                        withAnimation(.easeIn) { goal.goalInformation.selfDirected = false}
                         withAnimation(.easeOut) { mainErrorSelected = false }
                     }
                     
@@ -285,16 +276,16 @@ struct SpecificationsCreateView: View {
                             .frame(width: 70, height: 70)
                         
                         Circle()
-                            .foregroundStyle (goalInfo.selectedPicker == 3 ? LinearGradient(gradient: Gradient(colors: [.accentColor, .achieveColorHeavy]), startPoint: .topLeading, endPoint: .bottomTrailing) : LinearGradient(colors: [Color(UIColor.systemBackground)], startPoint: .bottom, endPoint: .bottom))
+                            .foregroundStyle (selectedPicker == 3 ? LinearGradient(gradient: Gradient(colors: [.accentColor, .achieveColorHeavy]), startPoint: .topLeading, endPoint: .bottomTrailing) : LinearGradient(colors: [Color(UIColor.systemBackground)], startPoint: .bottom, endPoint: .bottom))
                             .frame(width: 64, height: 64)
                         
                         Image(systemName: "person.crop.circle.fill.badge.checkmark")
                             .scaleEffect(2.2)
-                            .foregroundStyle (goalInfo.selectedPicker != 3 ? LinearGradient(gradient: Gradient(colors: [.accentColor, .achieveColorHeavy]), startPoint: .topLeading, endPoint: .bottomTrailing) : LinearGradient(colors: [Color(UIColor.systemBackground)], startPoint: .bottom, endPoint: .bottom))
+                            .foregroundStyle (selectedPicker != 3 ? LinearGradient(gradient: Gradient(colors: [.accentColor, .achieveColorHeavy]), startPoint: .topLeading, endPoint: .bottomTrailing) : LinearGradient(colors: [Color(UIColor.systemBackground)], startPoint: .bottom, endPoint: .bottom))
                     }
                     .onTapGesture {
-                        withAnimation(.easeIn) { goalInfo.selectedPicker = 3}
-                        withAnimation(.easeIn) { goalInfo.goalSpecs.selfDirected = true}
+                        withAnimation(.easeIn) { selectedPicker = 3}
+                        withAnimation(.easeIn) { goal.goalInformation.selfDirected = true}
                         withAnimation(.easeOut) { mainErrorSelected = false }
                         errorCheck()
                     }
@@ -303,7 +294,7 @@ struct SpecificationsCreateView: View {
                 
                 ZStack {
                     
-                    if goalInfo.selectedPicker != 0 {
+                    if selectedPicker != 0 {
                         RoundedRectangle(cornerRadius: 25)
                             .frame(width: screenWidth/1.15+6, height: 355, alignment: .bottom)
                             .foregroundStyle(LinearGradient(gradient: Gradient(colors: [.accentColor, .achieveColorHeavy]), startPoint: .topLeading, endPoint: .bottomTrailing))
@@ -315,7 +306,7 @@ struct SpecificationsCreateView: View {
                             .foregroundStyle(.ultraThinMaterial)
                     }
                     
-                    if goalInfo.selectedPicker == 1 {
+                    if selectedPicker == 1 {
                         
                         Text("Time Settings")
                             .font(.title2.bold())
@@ -343,21 +334,21 @@ struct SpecificationsCreateView: View {
                                                 RoundedRectangle(cornerRadius: 8)
                                                     .frame(width: 30, height: 30)
                                                     .offset(x: -10, y: 10)
-                                                    .foregroundStyle(goalInfo.goalSpecs.selectedTimeSpec == 1 ? achieveStyleSimple : achieveStyleWhite)
+                                                    .foregroundStyle(goal.goalInformation.selectedTimeSpec == 1 ? achieveStyleSimple : achieveStyleWhite)
                                                 
                                                 Text("\(Image(systemName: "checkmark"))")
                                                     .bold()
                                                     .font(.title3)
                                                     .offset(x: -10, y: 9)
                                                     .foregroundColor(Color(UIColor.systemBackground))
-                                                    .opacity(goalInfo.goalSpecs.selectedTimeSpec == 1 ? 1 : 0)
+                                                    .opacity(goal.goalInformation.selectedTimeSpec == 1 ? 1 : 0)
                                                 
                                                 RoundedRectangle(cornerRadius: 10)
                                                     .frame(width: 35, height: 35)
                                                     .offset(x: -10, y: 10)
                                                     .opacity(0.0001)
                                                     .onTapGesture{
-                                                        goalInfo.goalSpecs.selectedTimeSpec = 1
+                                                        goal.goalInformation.selectedTimeSpec = 1
                                                         withAnimation(.easeIn) {uiUpdate.toggle()}
                                                         mainErrorSelected = false
                                                     }
@@ -380,21 +371,21 @@ struct SpecificationsCreateView: View {
                                                 RoundedRectangle(cornerRadius: 8)
                                                     .frame(width: 30, height: 30)
                                                     .offset(x: -10, y: 0)
-                                                    .foregroundStyle(goalInfo.goalSpecs.selectedTimeSpec == 2 ? achieveStyleSimple : achieveStyleWhite)
+                                                    .foregroundStyle(goal.goalInformation.selectedTimeSpec == 2 ? achieveStyleSimple : achieveStyleWhite)
                                                 
                                                 Text("\(Image(systemName: "checkmark"))")
                                                     .bold()
                                                     .font(.title3)
                                                     .offset(x: -10, y: -1)
                                                     .foregroundColor(Color(UIColor.systemBackground))
-                                                    .opacity(goalInfo.goalSpecs.selectedTimeSpec == 2 ? 1 : 0)
+                                                    .opacity(goal.goalInformation.selectedTimeSpec == 2 ? 1 : 0)
                                                 
                                                 RoundedRectangle(cornerRadius: 10)
                                                     .frame(width: 35, height: 35)
                                                     .offset(x: -10, y: 10)
                                                     .opacity(0.0001)
                                                     .onTapGesture{
-                                                        goalInfo.goalSpecs.selectedTimeSpec = 2
+                                                        goal.goalInformation.selectedTimeSpec = 2
                                                         withAnimation(.easeIn) {uiUpdate.toggle()}
                                                         mainErrorSelected = false
                                                     }
@@ -418,21 +409,21 @@ struct SpecificationsCreateView: View {
                                                 RoundedRectangle(cornerRadius: 8)
                                                     .frame(width: 30, height: 30)
                                                     .offset(x: -10, y: 0)
-                                                    .foregroundStyle(goalInfo.goalSpecs.selectedTimeSpec == 3 ? achieveStyleSimple : achieveStyleWhite)
+                                                    .foregroundStyle(goal.goalInformation.selectedTimeSpec == 3 ? achieveStyleSimple : achieveStyleWhite)
                                                 
                                                 Text("\(Image(systemName: "checkmark"))")
                                                     .bold()
                                                     .font(.title3)
                                                     .offset(x: -10, y: -1)
                                                     .foregroundColor(Color(UIColor.systemBackground))
-                                                    .opacity(goalInfo.goalSpecs.selectedTimeSpec == 3 ? 1 : 0)
+                                                    .opacity(goal.goalInformation.selectedTimeSpec == 3 ? 1 : 0)
                                                 
                                                 RoundedRectangle(cornerRadius: 10)
                                                     .frame(width: 35, height: 35)
                                                     .offset(x: -10, y: 10)
                                                     .opacity(0.0001)
                                                     .onTapGesture{
-                                                        goalInfo.goalSpecs.selectedTimeSpec = 3
+                                                        goal.goalInformation.selectedTimeSpec = 3
                                                         withAnimation(.easeIn) {uiUpdate.toggle()}
                                                         mainErrorSelected = false
                                                     }
@@ -440,12 +431,12 @@ struct SpecificationsCreateView: View {
                                             
                                         }
                                     }
-                                    if goalInfo.goalSpecs.selectedTimeSpec == 1 {
+                                    if goal.goalInformation.selectedTimeSpec == 1 {
                                         Section (header: Text("\nScheduled Goal Settings").font(.caption).offset(x: -70)){
                                             HStack {
                                                 Text("Schedule: ")
                                                 
-                                                Picker("", selection: $goalInfo.goalSpecs.scheduleType) {
+                                                Picker("", selection: $goal.goalInformation.scheduleType) {
                                                     Text("Daily")
                                                         .tag(1)
                                                     Text("Weekly")
@@ -461,7 +452,7 @@ struct SpecificationsCreateView: View {
                                                 
                                                 Spacer()
                                                 
-                                                Picker("sType", selection: $goalInfo.goalSpecs.durationSpec) {
+                                                Picker("sType", selection: $goal.goalInformation.durationSpec) {
                                                     Text("Specified")
                                                         .tag(1)
                                                     Text("Non-Specified")
@@ -472,19 +463,19 @@ struct SpecificationsCreateView: View {
                                                 .onSubmit({errorCheck()})
                                                 
                                             }
-                                            if goalInfo.goalSpecs.durationSpec == 1 && goalInfo.goalSpecs.scheduleType != -1{
+                                            if goal.goalInformation.durationSpec == 1 && goal.goalInformation.scheduleType != -1{
                                                 HStack {
                                                     Text("Continue for:")
                                                     
                                                     Spacer()
                                                     
-                                                    TextField("# of", text: $goalInfo.goalSpecs.durationAmount)
+                                                    TextField("# of", text: $goal.goalInformation.durationAmount)
                                                         .keyboardType(.numberPad)
                                                         .frame(width: 50)
                                                         .multilineTextAlignment(.trailing)
                                                         .focused($keyboardActive)
                                                     
-                                                    Text(updateSche(goalInfo.goalSpecs.scheduleType))
+                                                    Text(updateSche(goal.goalInformation.scheduleType))
                                                     
                                                 }
                                             }
@@ -498,11 +489,11 @@ struct SpecificationsCreateView: View {
                                             
                                             Text("")
                                         }
-                                    } else if goalInfo.goalSpecs.selectedTimeSpec == 2 {
+                                    } else if goal.goalInformation.selectedTimeSpec == 2 {
                                         
                                         Section (header: Text("\nCountdown Goal Settings").font(.caption).offset(x: -68, y: 5)){
                                             
-                                            DatePicker(selection: $goalInfo.goalSpecs.finishDate, in: Date()..., displayedComponents: .date) {
+                                            DatePicker(selection: $goal.goalInformation.finishDate, in: Date()..., displayedComponents: .date) {
                                                 Text("Finish Date")
                                             }
                                             
@@ -511,7 +502,7 @@ struct SpecificationsCreateView: View {
                                                 
                                                 Spacer()
                                                 
-                                                Toggle("", isOn: $goalInfo.goalSpecs.startingToday)
+                                                Toggle("", isOn: $goal.goalInformation.startingToday)
                                                     .labelsHidden()
                                                     .tint(.accentColor)
                                                     .offset(x: -1)
@@ -574,7 +565,7 @@ struct SpecificationsCreateView: View {
                         }
                         .offset(x: 0, y: 20)
                         
-                    } else if goalInfo.selectedPicker == 2 {
+                    } else if selectedPicker == 2 {
                         
                         Text("Count Settings")
                             .font(.title2.bold())
@@ -604,21 +595,21 @@ struct SpecificationsCreateView: View {
                                                 RoundedRectangle(cornerRadius: 8)
                                                     .frame(width: 30, height: 30)
                                                     .offset(x: -10, y: 10)
-                                                    .foregroundStyle(goalInfo.goalSpecs.selectedAmountSpec == 1 ? achieveStyleSimple : achieveStyleWhite)
+                                                    .foregroundStyle(goal.goalInformation.selectedAmountSpec == 1 ? achieveStyleSimple : achieveStyleWhite)
                                                 
                                                 Text("\(Image(systemName: "checkmark"))")
                                                     .bold()
                                                     .font(.title3)
                                                     .offset(x: -10, y: 9)
                                                     .foregroundColor(Color(UIColor.systemBackground))
-                                                    .opacity(goalInfo.goalSpecs.selectedAmountSpec == 1 ? 1 : 0)
+                                                    .opacity(goal.goalInformation.selectedAmountSpec == 1 ? 1 : 0)
                                                 
                                                 RoundedRectangle(cornerRadius: 10)
                                                     .frame(width: 35, height: 35)
                                                     .offset(x: -10, y: 10)
                                                     .opacity(0.0001)
                                                     .onTapGesture{
-                                                        goalInfo.goalSpecs.selectedAmountSpec = 1
+                                                        goal.goalInformation.selectedAmountSpec = 1
                                                         withAnimation(.easeIn) {uiUpdate.toggle()}
                                                         mainErrorSelected = false
                                                     }
@@ -642,21 +633,21 @@ struct SpecificationsCreateView: View {
                                                 RoundedRectangle(cornerRadius: 8)
                                                     .frame(width: 30, height: 30)
                                                     .offset(x: -10, y: 0)
-                                                    .foregroundStyle( goalInfo.goalSpecs.selectedAmountSpec == 2 ? achieveStyleSimple : achieveStyleWhite)
+                                                    .foregroundStyle( goal.goalInformation.selectedAmountSpec == 2 ? achieveStyleSimple : achieveStyleWhite)
                                                 
                                                 Text("\(Image(systemName: "checkmark"))")
                                                     .bold()
                                                     .font(.title3)
                                                     .offset(x: -10, y: -1)
                                                     .foregroundColor(Color(UIColor.systemBackground))
-                                                    .opacity( goalInfo.goalSpecs.selectedAmountSpec == 2 ? 1 : 0)
+                                                    .opacity( goal.goalInformation.selectedAmountSpec == 2 ? 1 : 0)
                                                 
                                                 RoundedRectangle(cornerRadius: 10)
                                                     .frame(width: 35, height: 35)
                                                     .offset(x: -10, y: 10)
                                                     .opacity(0.0001)
                                                     .onTapGesture{
-                                                        goalInfo.goalSpecs.selectedAmountSpec = 2
+                                                        goal.goalInformation.selectedAmountSpec = 2
                                                         withAnimation(.easeIn) {uiUpdate.toggle()}
                                                         mainErrorSelected = false
                                                     }
@@ -681,21 +672,21 @@ struct SpecificationsCreateView: View {
                                                 RoundedRectangle(cornerRadius: 8)
                                                     .frame(width: 30, height: 30)
                                                     .offset(x: -10, y: 0)
-                                                    .foregroundStyle( goalInfo.goalSpecs.selectedAmountSpec == 3 ? achieveStyleSimple : achieveStyleWhite)
+                                                    .foregroundStyle( goal.goalInformation.selectedAmountSpec == 3 ? achieveStyleSimple : achieveStyleWhite)
                                                 
                                                 Text("\(Image(systemName: "checkmark"))")
                                                     .bold()
                                                     .font(.title3)
                                                     .offset(x: -10, y: -1)
                                                     .foregroundColor(Color(UIColor.systemBackground))
-                                                    .opacity( goalInfo.goalSpecs.selectedAmountSpec == 3 ? 1 : 0)
+                                                    .opacity( goal.goalInformation.selectedAmountSpec == 3 ? 1 : 0)
                                                 
                                                 RoundedRectangle(cornerRadius: 10)
                                                     .frame(width: 35, height: 35)
                                                     .offset(x: -10, y: 10)
                                                     .opacity(0.0001)
                                                     .onTapGesture{
-                                                        goalInfo.goalSpecs.selectedAmountSpec = 3
+                                                        goal.goalInformation.selectedAmountSpec = 3
                                                         withAnimation(.easeIn) {uiUpdate.toggle()}
                                                         mainErrorSelected = false
                                                     }
@@ -703,13 +694,13 @@ struct SpecificationsCreateView: View {
                                             
                                         }
                                     }
-                                    if goalInfo.goalSpecs.selectedAmountSpec == 1 {
+                                    if goal.goalInformation.selectedAmountSpec == 1 {
                                         Section (header: Text("\nQuantity Based Settings").font(.caption).offset(x: -74)){
                                             
                                             HStack {
                                                 Text("Goal Objective Amount:")
                                                 Spacer()
-                                                TextField("Amount", text: $goalInfo.goalSpecs.goalAmount)
+                                                TextField("Amount", text: $goal.goalInformation.goalAmount)
                                                     .keyboardType(.numberPad)
                                                     .frame(width: 100)
                                                     .multilineTextAlignment(.trailing)
@@ -720,7 +711,7 @@ struct SpecificationsCreateView: View {
                                                 
                                                 Spacer()
                                                 
-                                                Picker("sType", selection: $goalInfo.goalSpecs.isGoalIncrement) {
+                                                Picker("sType", selection: $goal.goalInformation.isGoalIncrement) {
                                                     Text("Specified")
                                                         .tag(1)
                                                     Text("Non-Specified")
@@ -732,7 +723,7 @@ struct SpecificationsCreateView: View {
                                             Text("Should the amount be broken up into groups?").font(.caption)
                                                 .multilineTextAlignment(.leading)
                                             
-                                            if goalInfo.goalSpecs.isGoalIncrement == 1 && goalInfo.goalSpecs.goalAmount != "" {
+                                            if goal.goalInformation.isGoalIncrement == 1 && goal.goalInformation.goalAmount != "" {
                                                 
                                                 HStack {
                                                     VStack(alignment: .leading){
@@ -740,7 +731,7 @@ struct SpecificationsCreateView: View {
                                                         
                                                     }
                                                     Spacer()
-                                                    TextField("Amount", text: $goalInfo.goalSpecs.goalIncrement)
+                                                    TextField("Amount", text: $goal.goalInformation.goalIncrement)
                                                         .keyboardType(.numberPad)
                                                         .frame(width: 100)
                                                         .multilineTextAlignment(.trailing)
@@ -761,17 +752,17 @@ struct SpecificationsCreateView: View {
                                                 .tag("bottomAmount1")
                                             
                                         }
-                                    } else if goalInfo.goalSpecs.selectedAmountSpec == 2 {
+                                    } else if goal.goalInformation.selectedAmountSpec == 2 {
                                         
                                         Section (header: Text("\nTime Based Settings").font(.caption).offset(x: -82, y: 5)){
                                             HStack{
                                                 VStack(alignment:.leading){
                                                     Text("Duration Type:")
-                                                    if goalInfo.goalSpecs.scheduleType == 1 {
+                                                    if goal.goalInformation.scheduleType == 1 {
                                                         Text("Per day").font(.caption)
-                                                    } else if goalInfo.goalSpecs.scheduleType == 2 {
+                                                    } else if goal.goalInformation.scheduleType == 2 {
                                                         Text("Per week").font(.caption)
-                                                    } else if goalInfo.goalSpecs.scheduleType == 3 {
+                                                    } else if goal.goalInformation.scheduleType == 3 {
                                                         Text("Per month").font(.caption)
                                                     } else {
                                                         Text("Per day").font(.caption)
@@ -780,31 +771,31 @@ struct SpecificationsCreateView: View {
                                                 
                                                 Spacer()
                                                 
-                                                Picker("sType", selection: $goalInfo.goalSpecs.amountDurationType) {
+                                                Picker("sType", selection: $goal.goalInformation.amountDurationType) {
                                                     Text("Minutes")
                                                         .tag(1)
                                                     Text("Hours")
                                                         .tag(2)
-                                                    if goalInfo.goalSpecs.scheduleType == 2 || goalInfo.goalSpecs.scheduleType == 3{
+                                                    if goal.goalInformation.scheduleType == 2 || goal.goalInformation.scheduleType == 3{
                                                         Text("Days")
                                                             .tag(3)
                                                     }
                                                 }
                                                 .pickerStyle(SegmentedPickerStyle())
                                             }
-                                            if goalInfo.goalSpecs.amountDurationType != -1 {
+                                            if goal.goalInformation.amountDurationType != -1 {
                                                 HStack{
-                                                    if goalInfo.goalSpecs.amountDurationType == 1{
+                                                    if goal.goalInformation.amountDurationType == 1{
                                                         Text("Amount of Minutes:")
-                                                    } else if  goalInfo.goalSpecs.amountDurationType == 2 {
+                                                    } else if  goal.goalInformation.amountDurationType == 2 {
                                                         Text("Amount of Hours:")
-                                                    } else if goalInfo.goalSpecs.amountDurationType == 3 {
+                                                    } else if goal.goalInformation.amountDurationType == 3 {
                                                         Text("Amount of Weeks:")
                                                     }
                                                     
                                                     Spacer()
                                                     
-                                                    TextField("Amount", text: $goalInfo.goalSpecs.amountDurationAmount)
+                                                    TextField("Amount", text: $goal.goalInformation.amountDurationAmount)
                                                         .keyboardType(.numberPad)
                                                         .frame(width: 100)
                                                         .multilineTextAlignment(.trailing)
@@ -872,7 +863,7 @@ struct SpecificationsCreateView: View {
                         }
                         .offset(x: 0, y: 20)
                         
-                    } else if goalInfo.selectedPicker == 3 {
+                    } else if selectedPicker == 3 {
                         
                         Text("Self Directed Goal")
                             .font(.title2.bold())
@@ -901,7 +892,7 @@ struct SpecificationsCreateView: View {
                             .font(.caption)
                             .foregroundColor(.red)
                             .frame(width: 340, alignment: .leading)
-                            .offset(y: goalInfo.selectedPicker == 0 ? 365 : 200)
+                            .offset(y: selectedPicker == 0 ? 365 : 200)
                     }
                     
                 }
@@ -910,7 +901,7 @@ struct SpecificationsCreateView: View {
                     mainErrorCheck()
                     errorCheck()
                     
-                    goalInfo.accentColor = goalInfo.catagory?.color ?? .black
+                    goal.accentColor = goal.catagory?.color ?? .black
                     
                     if timeError1Selected == false && timeError2Selected == false && amountError1Selected == false && amountError2Selected == false && mainErrorSelected == false {
                         sendNextView = true
@@ -959,13 +950,14 @@ struct SpecificationsCreateView: View {
 }
 
 struct SpecificationsView_Previews: PreviewProvider {
-    static let goalInfo = newGoalInfo()
+    static let goal = Goal()
     static let screenInfo = goalScreenInfo()
+    var selectedPicker = 1
     static var previews: some View {
         NavigationView {
-            SpecificationsCreateView()
+            SpecificationsCreateView(selectedPicker: 1)
         }
-        .environmentObject(goalInfo)
+        .environmentObject(goal)
         .environmentObject(screenInfo)
     }
 }

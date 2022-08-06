@@ -13,37 +13,34 @@ struct smallCompletedGoalView: View {
     
     @EnvironmentObject var screenInfo: goalScreenInfo
     
-    let info: newGoalInfo
+    let goal: Goal
     
-    fileprivate func attachValues(_ copyGoal: newGoalInfo) {
-        copyGoal.title = info.title
-        copyGoal.displayTitle = info.displayTitle
-        copyGoal.catagory = info.catagory
-        copyGoal.directionIndex = info.directionIndex
-        copyGoal.goalSpecs = info.goalSpecs
-        copyGoal.accentColor = info.accentColor
-        copyGoal.backgroundColor = info.backgroundColor
-        copyGoal.isCompleted = info.isCompleted
-        copyGoal.currentlyCustom = info.currentlyCustom
+    fileprivate func attachValues(_ copyGoal: Goal) {
+        copyGoal.title = goal.title
+        copyGoal.displayTitle = goal.displayTitle
+        copyGoal.catagory = goal.catagory
+        copyGoal.directionIndex = goal.directionIndex
+        copyGoal.goalInformation = goal.goalInformation
+        copyGoal.accentColor = goal.accentColor
+        copyGoal.backgroundColor = goal.backgroundColor
+        copyGoal.state = goal.state
+        copyGoal.goalID = goal.goalID
     }
     
     func repeatGoal () {
         withAnimation(.easeOut) {
             
-            for activegoals in screenInfo.activeGoalsArray {
-                if info.title == activegoals.title && info.goalSpecs.goalAmount == activegoals.goalSpecs.goalAmount && info.displayTitle == activegoals.displayTitle && info.goalSpecs.selfDirected == activegoals.goalSpecs.selfDirected && info.accentColor == activegoals.accentColor && info.backgroundColor == activegoals.backgroundColor {
-                    info.showRepeatError = true
+            for activegoal in screenInfo.activeGoalsArray {
+                if goal.goalID == activegoal.goalID{
                     return
                 }
             }
-            
-            info.showRepeatError = false
                 
-            let copyGoal = newGoalInfo()
+            let copyGoal = Goal()
             
             attachValues(copyGoal)
             
-            copyGoal.isCompleted = false
+            copyGoal.state = .active
             screenInfo.activeGoalsArray.append(copyGoal)
             screenInfo.refresh.toggle()
             
@@ -59,36 +56,36 @@ struct smallCompletedGoalView: View {
             RoundedRectangle(cornerRadius: 25, style: .circular)
                 .frame(width: screenWidth*0.425*2.125, height: screenWidth*0.425/2, alignment: .leading)
                 .padding(.bottom, 10)
-                .foregroundColor(info.backgroundColor.opacity(0.2))
+                .foregroundColor(goal.backgroundColor.opacity(0.2))
                 .foregroundStyle(.ultraThinMaterial)
             
             HStack{
                 ZStack{
                     RoundedRectangle(cornerRadius: 10)
                         .frame(width: 60, height: 60, alignment: .leading)
-                        .foregroundColor(info.accentColor.opacity(0.2))
+                        .foregroundColor(goal.accentColor.opacity(0.2))
                         .foregroundStyle(.ultraThinMaterial)
                     
-                    if info.timesCompleted < 2 {
-                        Text("\(info.catagory?.symbol ?? Image(systemName: "flag.fill"))")
+                    if goal.timesCompleted < 2 {
+                        Text("\(goal.catagory?.symbol ?? Image(systemName: "flag.fill"))")
                             .scaleEffect(1.8)
-                            .foregroundColor(info.accentColor)
+                            .foregroundColor(goal.accentColor)
                     } else {
-                        Text("\(info.timesCompleted)x")
+                        Text("\(goal.timesCompleted)x")
                             .font(.largeTitle.bold())
-                            .foregroundColor(info.accentColor)
+                            .foregroundColor(goal.accentColor)
                     }
                     
                 }
                 .padding(.trailing, 15)
                 
-                if info.displayTitle == "" {
-                    Text("\(info.title)")
+                if goal.displayTitle == "" {
+                    Text("\(goal.title)")
                         .font(.body.bold())
                         .frame(width: 190, alignment: .topLeading)
                         .frame(minHeight: 20, idealHeight: 20, maxHeight: 50, alignment: .leading)
                 } else {
-                    Text("\(info.displayTitle)")
+                    Text("\(goal.displayTitle)")
                         .font(.body.bold())
                         .frame(width: 190, alignment: .topLeading)
                         .frame(minHeight: 20, idealHeight: 20, maxHeight: 50, alignment: .leading)
@@ -99,21 +96,18 @@ struct smallCompletedGoalView: View {
                 ZStack{
                     RoundedRectangle(cornerRadius: 22)
                         .frame(width: 20, height: 50, alignment: .bottom)
-                        .foregroundColor(info.accentColor.opacity(0.2))
+                        .foregroundColor(goal.accentColor.opacity(0.2))
                         .foregroundStyle(.ultraThinMaterial)
                     
                     Menu("\(Image(systemName: "ellipsis"))") {
-                        if whatBottomTextType(info) == 0 {
+                        if whatBottomTextType(goal) == 0 {
                             Button("Repeat Goal", action: repeatGoal)
                         } else {
                             Text("Cannot repeat this goal at this time")
                         }
-                        if info.showRepeatError {
-                            Text("You cant have two repeats active at the same time")
-                        }
                     }
                     .rotationEffect(.degrees(90))
-                    .foregroundColor(info.accentColor)
+                    .foregroundColor(goal.accentColor)
                 }
                 
                 
@@ -131,15 +125,15 @@ struct smallDeletedGoalView: View {
     
     @EnvironmentObject var screenInfo: goalScreenInfo
     
-    let info: newGoalInfo
+    let goal: Goal
     
     func restoreGoal () {
         withAnimation(.easeOut) {
-            info.isDeleted = false
+            goal.state = .active
             screenInfo.refresh.toggle()
             
             for index in 0...screenInfo.deletedGoalsArray.count-1 {
-                if screenInfo.deletedGoalsArray[index].isDeleted == false {
+                if screenInfo.deletedGoalsArray[index].state == .active {
                     screenInfo.activeGoalsArray.append(screenInfo.deletedGoalsArray[index])
                     screenInfo.deletedGoalsArray.remove(at: index)
                     screenInfo.catagoryScores = catagoryPrecedence(screenInfo.activeGoalsArray)
@@ -152,9 +146,9 @@ struct smallDeletedGoalView: View {
     }
     
     func deleteForever() {
-        info.isGone = true
+        goal.state = .gone
         for index in 0...screenInfo.deletedGoalsArray.count-1 {
-            if screenInfo.deletedGoalsArray[index].isGone == true {
+            if screenInfo.deletedGoalsArray[index].state == .gone {
                 screenInfo.deletedGoalsArray.remove(at: index)
                 screenInfo.catagoryScores = catagoryPrecedence(screenInfo.activeGoalsArray)
                 screenInfo.progressionEnd = currentProgressTotal(screenInfo.activeGoalsArray)
@@ -170,29 +164,29 @@ struct smallDeletedGoalView: View {
             RoundedRectangle(cornerRadius: 25, style: .circular)
                 .frame(width: screenWidth*0.425*2.125, height: screenWidth*0.425/2, alignment: .leading)
                 .padding(.bottom, 10)
-                .foregroundColor(info.backgroundColor.opacity(0.2))
+                .foregroundColor(goal.backgroundColor.opacity(0.2))
                 .foregroundStyle(.ultraThinMaterial)
             
             HStack{
                 ZStack{
                     RoundedRectangle(cornerRadius: 10)
                         .frame(width: 60, height: 60, alignment: .leading)
-                        .foregroundColor(info.accentColor.opacity(0.2))
+                        .foregroundColor(goal.accentColor.opacity(0.2))
                         .foregroundStyle(.ultraThinMaterial)
                     
-                    Text("\(info.catagory?.symbol ?? Image(systemName: "flag.fill"))")
+                    Text("\(goal.catagory?.symbol ?? Image(systemName: "flag.fill"))")
                         .scaleEffect(1.8)
-                        .foregroundColor(info.accentColor)
+                        .foregroundColor(goal.accentColor)
                 }
                 .padding(.trailing, 15)
                 
-                if info.displayTitle == "" {
-                    Text("\(info.title)")
+                if goal.displayTitle == "" {
+                    Text("\(goal.title)")
                         .font(.body.bold())
                         .frame(width: 190, alignment: .topLeading)
                         .frame(minHeight: 20, idealHeight: 20, maxHeight: 50, alignment: .leading)
                 } else {
-                    Text("\(info.displayTitle)")
+                    Text("\(goal.displayTitle)")
                         .font(.body.bold())
                         .frame(width: 190, alignment: .topLeading)
                         .frame(minHeight: 20, idealHeight: 20, maxHeight: 50, alignment: .leading)
@@ -203,19 +197,19 @@ struct smallDeletedGoalView: View {
                 ZStack{
                     RoundedRectangle(cornerRadius: 22)
                         .frame(width: 20, height: 50, alignment: .bottom)
-                        .foregroundColor(info.accentColor.opacity(0.2))
+                        .foregroundColor(goal.accentColor.opacity(0.2))
                         .foregroundStyle(.ultraThinMaterial)
                     
                     Menu("\(Image(systemName: "ellipsis"))") {
                             Button("Delete Forever", action: deleteForever)
-                        if whatBottomTextType(info) == 0 {
+                        if whatBottomTextType(goal) == 0 {
                             Button("Restore Goal", action: restoreGoal)
                         } else {
                             Text("Cannot restore this goal at this time")
                         }
                     }
                     .rotationEffect(.degrees(90))
-                    .foregroundColor(info.accentColor)
+                    .foregroundColor(goal.accentColor)
                 }
                 
                 
@@ -232,7 +226,7 @@ struct smallGoalView: View {
         let screenWidth = UIScreen.main.bounds.size.width
         
         @EnvironmentObject var screenInfo: goalScreenInfo
-        let info: newGoalInfo
+        let goal: Goal
         
         var body: some View {
             ZStack{
@@ -240,36 +234,36 @@ struct smallGoalView: View {
                 RoundedRectangle(cornerRadius: 25, style: .circular)
                     .frame(width: screenWidth*0.425*2.125, height: screenWidth*0.425/2, alignment: .leading)
                     .padding(.bottom, 10)
-                    .foregroundColor(info.backgroundColor.opacity(0.2))
+                    .foregroundColor(goal.backgroundColor.opacity(0.2))
                     .foregroundStyle(.ultraThinMaterial)
                 
                 HStack{
                     ZStack{
                         RoundedRectangle(cornerRadius: 10)
                             .frame(width: 60, height: 60, alignment: .leading)
-                            .foregroundColor(info.accentColor.opacity(0.2))
+                            .foregroundColor(goal.accentColor.opacity(0.2))
                             .foregroundStyle(.ultraThinMaterial)
                         
-                        if info.timesCompleted < 2 {
-                            Text("\(info.catagory?.symbol ?? Image(systemName: "flag.fill"))")
+                        if goal.timesCompleted < 2 {
+                            Text("\(goal.catagory?.symbol ?? Image(systemName: "flag.fill"))")
                                 .scaleEffect(1.8)
-                                .foregroundColor(info.accentColor)
+                                .foregroundColor(goal.accentColor)
                         } else {
-                            Text("\(info.timesCompleted)x")
+                            Text("\(goal.timesCompleted)x")
                                 .font(.largeTitle.bold())
-                                .foregroundColor(info.accentColor)
+                                .foregroundColor(goal.accentColor)
                         }
                         
                     }
                     .padding(.trailing, 15)
                     
-                    if info.displayTitle == "" {
-                        Text("\(info.title)")
+                    if goal.displayTitle == "" {
+                        Text("\(goal.title)")
                             .font(.body.bold())
                             .frame(width: 190, alignment: .topLeading)
                             .frame(minHeight: 20, idealHeight: 20, maxHeight: 50, alignment: .leading)
                     } else {
-                        Text("\(info.displayTitle)")
+                        Text("\(goal.displayTitle)")
                             .font(.body.bold())
                             .frame(width: 190, alignment: .topLeading)
                             .frame(minHeight: 20, idealHeight: 20, maxHeight: 50, alignment: .leading)

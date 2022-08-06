@@ -8,10 +8,10 @@
 import SwiftUI
 
 class goalScreenInfo : ObservableObject {
-    @Published var activeGoalsArray: [newGoalInfo] = []
-    @Published var completedForToday: [newGoalInfo] = []
-    @Published var deletedGoalsArray: [newGoalInfo] = []
-    @Published var completedGoalsArray: [newGoalInfo] = []
+    @Published var activeGoalsArray: [Goal] = []
+    @Published var completedForToday: [Goal] = []
+    @Published var deletedGoalsArray: [Goal] = []
+    @Published var completedGoalsArray: [Goal] = []
     @Published var firstTime = true
     @Published var showWelcomeScreen = true
     @Published var refresh = true
@@ -26,7 +26,7 @@ class goalScreenInfo : ObservableObject {
     @Published var notificationTime = Date()
     
     @Published var showingGoalCompleted = false
-    @Published var latestCompleteInfo = newGoalInfo()
+    @Published var latestCompleteInfo = Goal()
     @Published var latestCompleteTextType = 0
 }
 

@@ -13,7 +13,7 @@ struct CatagoryCreateView: View {
     let screenHeight = UIScreen.main.bounds.size.height
     let screenSize = UIScreen.main.bounds.size
     
-    @EnvironmentObject var goalInfo: newGoalInfo
+    @EnvironmentObject var goal: Goal
     @EnvironmentObject var screenInfo: goalScreenInfo
     
     @State var catagoryError = false
@@ -22,15 +22,16 @@ struct CatagoryCreateView: View {
     @State var dropDownOpen = false
     @State var enableDirection = false
     
-    fileprivate func prepairPicker() {
-        if goalInfo.goalSpecs.selectedTimeSpec != -1 {
-            goalInfo.selectedPicker = 1
-        } else if goalInfo.goalSpecs.selectedAmountSpec != -1 {
-            goalInfo.selectedPicker = 2
+    func requiredPicker(_ goal: Goal) -> Int {
+        if goal.goalInformation.selectedTimeSpec != -1 {
+            return 1
+        } else if goal.goalInformation.selectedAmountSpec != -1 {
+            return 2
         }
-        if goalInfo.goalSpecs.selfDirected == true {
-            goalInfo.selectedPicker = 3
+        if goal.goalInformation.selfDirected == true {
+            return 3
         }
+        return 1
     }
     
     var body: some View {
@@ -60,16 +61,16 @@ struct CatagoryCreateView: View {
                         .foregroundStyle(.ultraThinMaterial)
                     
                     HStack {
-                        if goalInfo.catagory != nil {
-                            Text("\(goalInfo.catagory!.symbol)")
+                        if goal.catagory != nil {
+                            Text("\(goal.catagory!.symbol)")
                                 .bold()
                         } else {
                             Text("\(Image(systemName: "flag.fill"))")
                                 .foregroundColor(.secondary)
                         }
                         
-                        if goalInfo.catagory != nil {
-                            Text("\(goalInfo.catagory!.title)")
+                        if goal.catagory != nil {
+                            Text("\(goal.catagory!.title)")
                                 .bold()
                         } else {
                             Text("Select a catagory...")
@@ -113,27 +114,27 @@ struct CatagoryCreateView: View {
                     if dropDownOpen == true {
                         VStack {
                             Spacer()
-                            ForEach(0...predictCatagory(goalInfo.title).count-1, id: \.self ) { index in
+                            ForEach(0...predictCatagory(goal.title).count-1, id: \.self ) { index in
                                 Button {
-                                    goalInfo.catagory = predictCatagory(goalInfo.title)[index]
-                                    if goalInfo.catagory != nil {
-                                        goalInfo.directionsForUser = findDirectionsForUser(goalInfo.catagory!, goalInfo.title)
+                                    goal.catagory = predictCatagory(goal.title)[index]
+                                    if goal.catagory != nil {
+                                        goal.extras.directionsForUser = findDirectionsForUser(goal.catagory!, goal.title)
                                     }
                                 }
                             label: {
                                 HStack {
                                     Spacer()
-                                    Text ("\(predictCatagory(goalInfo.title)[index].symbol)")
+                                    Text ("\(predictCatagory(goal.title)[index].symbol)")
                                         .font(.body)
-                                    Text ("\(predictCatagory(goalInfo.title)[index].title)")
+                                    Text ("\(predictCatagory(goal.title)[index].title)")
                                         .bold()
                                     Spacer()
                                 }
                             }
                             .buttonStyle(.bordered)
-                            .background(goalInfo.catagory == predictCatagory(goalInfo.title)[index] ? Color.accentColor : Color(UIColor.systemBackground))
+                            .background(goal.catagory == predictCatagory(goal.title)[index] ? Color.accentColor : Color(UIColor.systemBackground))
                             .cornerRadius(30)
-                            .foregroundColor(goalInfo.catagory == predictCatagory(goalInfo.title)[index] ? Color(UIColor.systemBackground) : .accentColor)
+                            .foregroundColor(goal.catagory == predictCatagory(goal.title)[index] ? Color(UIColor.systemBackground) : .accentColor)
                                 
                             }
                         }
@@ -167,7 +168,7 @@ struct CatagoryCreateView: View {
                                             
                         if enableDirection && dropDownOpen == false {
                             ZStack {
-                                if goalInfo.catagory != nil && goalInfo.catagory != .othercat {
+                                if goal.catagory != nil && goal.catagory != .othercat {
                                     RoundedRectangle(cornerRadius: 25)
                                         .frame(width: screenWidth/1.15+6, height: 205, alignment: .bottom)
                                         .foregroundStyle(!dropDownOpen ? achieveStyleSimple : LinearGradient(colors: [Color(UIColor.systemBackground)], startPoint: .bottom, endPoint: .bottom))
@@ -178,16 +179,16 @@ struct CatagoryCreateView: View {
                                         .foregroundStyle(Color(UIColor.systemBackground))
                                         .foregroundStyle(.ultraThinMaterial)
                                 
-                                    Picker("Direction Selection", selection: $goalInfo.directionIndex) {
-                                        ForEach(0..<(goalInfo.directionsForUser?.count ?? 0), id: \.self ) { index in
-                                            Text("\(goalInfo.directionsForUser![index])")
+                                    Picker("Direction Selection", selection: $goal.directionIndex) {
+                                        ForEach(0..<(goal.extras.directionsForUser?.count ?? 0), id: \.self ) { index in
+                                            Text("\(goal.extras.directionsForUser![index])")
                                                 .bold()
                                                 .font(.body)
                                             }
                                         }
                                         .pickerStyle(.wheel)
                                                                         
-                                } else if goalInfo.catagory == .othercat {
+                                } else if goal.catagory == .othercat {
                                     Text("\(Image(systemName: "exclamationmark.circle.fill")) Select a specific catagory to view goal directions.")
                                         .font(.caption)
                                         .foregroundColor(.red)
@@ -210,19 +211,17 @@ struct CatagoryCreateView: View {
             }
             
             Button(action: {
-                if goalInfo.catagory == nil {
+                if goal.catagory == nil {
                     catagoryError = true
                 } else {
                     if enableDirection == false {
-                        goalInfo.directionIndex = -1
+                        goal.directionIndex = -1
                     }
                     sendNextView = true
                 }
-                if goalInfo.title != "" && goalInfo.catagory != nil && goalInfo.directionIndex != -1 {
-                    goalInfo.goalSpecs = addDirectionalValues(goalInfo.title, goalInfo.catagory!, goalInfo.directionIndex)
+                if goal.title != "" && goal.catagory != nil && goal.directionIndex != -1 {
+                    goal.goalInformation = addDirectionalValues(goal.title, goal.catagory!, goal.directionIndex)
                 }
-                
-                prepairPicker()
                 
             }) {
                 Text("Continue")
@@ -248,7 +247,7 @@ struct CatagoryCreateView: View {
         
         .background(
             NavigationLink(
-                destination: SpecificationsCreateView(),
+                destination: SpecificationsCreateView(selectedPicker: requiredPicker(goal)),
                 isActive: $sendNextView,
                 label: { EmptyView() })
         )
@@ -257,13 +256,13 @@ struct CatagoryCreateView: View {
 }
 
 struct CatagoryCreateView_Previews: PreviewProvider {
-    static let goalInfo = newGoalInfo()
+    static let goal = Goal()
     static let screenInfo = goalScreenInfo()
     static var previews: some View {
         NavigationView {
             CatagoryCreateView()
         }
-        .environmentObject(goalInfo)
+        .environmentObject(goal)
         .environmentObject(screenInfo)
     }
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class GoalSpecs {
+class GoalInformation {
     @Published var selectedTimeSpec: Int = -1
     @Published var selectedAmountSpec: Int = -1
 
