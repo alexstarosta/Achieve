@@ -42,11 +42,7 @@ struct smallCompletedGoalView: View {
             
             copyGoal.state = .active
             screenInfo.activeGoalsArray.append(copyGoal)
-            screenInfo.refresh.toggle()
-            
-            screenInfo.catagoryScores = catagoryPrecedence(screenInfo.activeGoalsArray)
-            screenInfo.progressionEnd = currentProgressTotal(screenInfo.activeGoalsArray)
-            screenInfo.progressionStart = currentProgressStart(screenInfo.activeGoalsArray)
+            screenInfo.updateOverall()
         }
     }
     
@@ -127,35 +123,12 @@ struct smallDeletedGoalView: View {
     
     let goal: Goal
     
-    func restoreGoal () {
-        withAnimation(.easeOut) {
-            goal.state = .active
-            screenInfo.refresh.toggle()
-            
-            for index in 0...screenInfo.deletedGoalsArray.count-1 {
-                if screenInfo.deletedGoalsArray[index].state == .active {
-                    screenInfo.activeGoalsArray.append(screenInfo.deletedGoalsArray[index])
-                    screenInfo.deletedGoalsArray.remove(at: index)
-                    screenInfo.catagoryScores = catagoryPrecedence(screenInfo.activeGoalsArray)
-                    screenInfo.progressionEnd = currentProgressTotal(screenInfo.activeGoalsArray)
-                    screenInfo.progressionStart = currentProgressStart(screenInfo.activeGoalsArray)
-                    break
-                }
-            }
-        }
+    func restoreFunc() {
+        goal.restoreGoal(screenInfo, goal)
     }
     
-    func deleteForever() {
-        goal.state = .gone
-        for index in 0...screenInfo.deletedGoalsArray.count-1 {
-            if screenInfo.deletedGoalsArray[index].state == .gone {
-                screenInfo.deletedGoalsArray.remove(at: index)
-                screenInfo.catagoryScores = catagoryPrecedence(screenInfo.activeGoalsArray)
-                screenInfo.progressionEnd = currentProgressTotal(screenInfo.activeGoalsArray)
-                screenInfo.progressionStart = currentProgressStart(screenInfo.activeGoalsArray)
-                break
-            }
-        }
+    func goneFunc() {
+        goal.goneGoal(screenInfo, goal)
     }
     
     var body: some View {
@@ -201,15 +174,16 @@ struct smallDeletedGoalView: View {
                         .foregroundStyle(.ultraThinMaterial)
                     
                     Menu("\(Image(systemName: "ellipsis"))") {
-                            Button("Delete Forever", action: deleteForever)
+                            Button("Delete Forever", action: goneFunc)
                         if whatBottomTextType(goal) == 0 {
-                            Button("Restore Goal", action: restoreGoal)
+                            Button("Restore Goal", action: restoreFunc)
                         } else {
                             Text("Cannot restore this goal at this time")
                         }
                     }
                     .rotationEffect(.degrees(90))
                     .foregroundColor(goal.accentColor)
+                    .contentShape(Capsule())
                 }
                 
                 

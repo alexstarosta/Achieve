@@ -10,10 +10,7 @@ import SwiftUI
 struct ProgressView: View {
     
     @EnvironmentObject var screenInfo: goalScreenInfo
-    
     let goal: Goal
-    
-    let screenWidth = UIScreen.main.bounds.size.width
     
     @State var startNumber: Int
     let endNumber: Int
@@ -42,17 +39,16 @@ struct ProgressView: View {
             startNumber += 1
             if goal.state != .custom {
                 goal.extras.startingNum += 1
-                screenInfo.progressionEnd = currentProgressTotal(screenInfo.activeGoalsArray)
-                screenInfo.progressionStart = currentProgressStart(screenInfo.activeGoalsArray)
+                screenInfo.updateOverall()
             }
         }
         if goal.state != .custom {
             if startNumber == endNumber {
                 if bottomTextType != 1 && bottomTextType != 2 && bottomTextType != 3 && goal.state != .completed {
                     goal.extras.startingNum = endNumber
-                    goalCompleted()
+                    completedFunc()
                 } else {
-                    doneForToday()
+                    doneTodayFunc()
                 }
             }
         }
@@ -66,13 +62,12 @@ struct ProgressView: View {
             startNumber -= 1
             if goal.state != .custom {
                 goal.extras.startingNum -= 1
-                screenInfo.progressionEnd = currentProgressTotal(screenInfo.activeGoalsArray)
-                screenInfo.progressionStart = currentProgressStart(screenInfo.activeGoalsArray)
+                screenInfo.updateOverall()
             }
         }
     }
     
-    func goalCompleted() {
+    func completedFunc() {
         
         if goal.state == .doneToday { return }
         
@@ -81,75 +76,17 @@ struct ProgressView: View {
             screenInfo.latestCompleteTextType = bottomTextType
             screenInfo.showingGoalCompleted = true
         } else {
-            goal.state = .completed
-            if bottomTextType != 1 && bottomTextType != 2 && bottomTextType != 3 {
-                goal.timesCompleted += 1
-            }
-            goal.extras.startingNum = 0
-            screenInfo.refresh.toggle()
-            
-            for completedGoal in screenInfo.completedGoalsArray {
-                if goal.goalID == completedGoal.goalID {
-                    completedGoal.timesCompleted += 1
-                    for index in 0...screenInfo.activeGoalsArray.count-1 {
-                        if screenInfo.activeGoalsArray[index].state == .completed {
-                            screenInfo.activeGoalsArray.remove(at: index)
-                            screenInfo.catagoryScores = catagoryPrecedence(screenInfo.activeGoalsArray)
-                            screenInfo.progressionEnd = currentProgressTotal(screenInfo.activeGoalsArray)
-                            screenInfo.progressionStart = currentProgressStart(screenInfo.activeGoalsArray)
-                            return
-                        }
-                    }
-                }
-            }
-            
-            for index in 0...screenInfo.activeGoalsArray.count-1 {
-                if screenInfo.activeGoalsArray[index].state == .completed  {
-                    screenInfo.completedGoalsArray.append(screenInfo.activeGoalsArray[index])
-                    screenInfo.activeGoalsArray.remove(at: index)
-                    screenInfo.catagoryScores = catagoryPrecedence(screenInfo.activeGoalsArray)
-                    screenInfo.progressionEnd = currentProgressTotal(screenInfo.activeGoalsArray)
-                    screenInfo.progressionStart = currentProgressStart(screenInfo.activeGoalsArray)
-                    break
-                }
-            }
+            goal.completeGoal(screenInfo, goal)
         }
         
     }
     
-    func doneForToday () {
+    func doneTodayFunc () {
         
         if goal.state == .custom { return }
         
-        goal.state = .doneToday
+        goal.doneTodayGoal(screenInfo, goal)
         
-        if bottomTextType == 1{
-            goal.goalInformation.durationAmount = ("\(Int(goal.goalInformation.durationAmount)! - 1)")
-        } else if bottomTextType == 2{
-            goal.timesCompleted += 1
-        }
-        
-        if screenInfo.activeGoalsArray.count-1 <= 0 {
-            if screenInfo.activeGoalsArray[0].state == .doneToday {
-                screenInfo.completedForToday.append(screenInfo.activeGoalsArray[0])
-                screenInfo.activeGoalsArray.remove(at: 0)
-                screenInfo.catagoryScores = catagoryPrecedence(screenInfo.activeGoalsArray)
-                screenInfo.progressionEnd = currentProgressTotal(screenInfo.activeGoalsArray)
-                screenInfo.progressionStart = currentProgressStart(screenInfo.activeGoalsArray)
-                return
-            }
-        }
-        
-        for index in 0...screenInfo.activeGoalsArray.count-1 {
-            if screenInfo.activeGoalsArray[index].state == .doneToday {
-                screenInfo.completedForToday.append(screenInfo.activeGoalsArray[index])
-                screenInfo.activeGoalsArray.remove(at: index)
-                screenInfo.catagoryScores = catagoryPrecedence(screenInfo.activeGoalsArray)
-                screenInfo.progressionEnd = currentProgressTotal(screenInfo.activeGoalsArray)
-                screenInfo.progressionStart = currentProgressStart(screenInfo.activeGoalsArray)
-                break
-            }
-        }
     }
     
     var body: some View {
@@ -302,9 +239,9 @@ struct ProgressView: View {
                 .offset(x: 0, y: 26)
                 .onTapGesture{
                     if bottomTextType != 1 && bottomTextType != 2 && bottomTextType != 3 {
-                        goalCompleted()
+                        completedFunc()
                     } else {
-                        doneForToday()
+                        doneTodayFunc()
                     }
                 }
             }

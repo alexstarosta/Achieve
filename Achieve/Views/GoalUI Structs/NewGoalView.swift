@@ -68,63 +68,22 @@ struct NewGoalView: View {
     
     let goal: Goal
     
-    let screenWidth = UIScreen.main.bounds.size.width
-    let screenHeight = UIScreen.main.bounds.size.height
-    let screenSize = UIScreen.main.bounds.size
-    
     let startNumber = 0
     
-    func goalCompleted() {
-        goal.state = .completed
-        goal.extras.startingNum = 0
-        screenInfo.refresh.toggle()
+    func completeFunc() {
         
-        if screenInfo.completedForToday.count-1 < 0 {
-            return
+        if screenInfo.disableCompletion == false {
+            screenInfo.latestCompleteInfo = goal
+            screenInfo.latestCompleteTextType = whatBottomTextType(goal)
+            screenInfo.showingGoalCompleted = true
+        } else {
+            goal.completeGoal(screenInfo, goal)
         }
         
-        for index in 0...screenInfo.completedForToday.count-1 {
-            if screenInfo.completedForToday[index].state == .completed {
-                screenInfo.completedGoalsArray.append(screenInfo.completedForToday[index])
-                screenInfo.completedForToday.remove(at: index)
-                screenInfo.catagoryScores = catagoryPrecedence(screenInfo.activeGoalsArray)
-                screenInfo.progressionEnd = currentProgressTotal(screenInfo.activeGoalsArray)
-                screenInfo.progressionStart = currentProgressStart(screenInfo.activeGoalsArray)
-                break
-            }
-        }
     }
     
-    func deleteGoal() {
-        let oldState = goal.state
-        withAnimation(.easeOut) {
-            goal.state = .deleted
-            screenInfo.refresh.toggle()
-            
-            if oldState == .doneToday {
-                for index in 0...screenInfo.completedForToday.count-1 {
-                    if screenInfo.completedForToday[index].state == .deleted {
-                        screenInfo.deletedGoalsArray.append(screenInfo.completedForToday[index])
-                        screenInfo.completedForToday.remove(at: index)
-                        screenInfo.progressionEnd = currentProgressTotal(screenInfo.activeGoalsArray)
-                        screenInfo.progressionStart = currentProgressStart(screenInfo.activeGoalsArray)
-                        screenInfo.catagoryScores = catagoryPrecedence(screenInfo.activeGoalsArray)
-                        break
-                    }
-                }
-            } else {
-                for index in 0...screenInfo.activeGoalsArray.count-1 {
-                    if screenInfo.activeGoalsArray[index].state == .deleted {
-                        screenInfo.deletedGoalsArray.append(screenInfo.activeGoalsArray[index])
-                        screenInfo.activeGoalsArray.remove(at: index)
-                        screenInfo.progressionEnd = currentProgressTotal(screenInfo.activeGoalsArray)
-                        screenInfo.progressionStart = currentProgressStart(screenInfo.activeGoalsArray)
-                        screenInfo.catagoryScores = catagoryPrecedence(screenInfo.activeGoalsArray)
-                        break
-                    }
-                }
-            }
-        }
+    func deleteFunc (){
+        goal.deleteGoal(screenInfo, goal)
     }
     
     var body: some View {
@@ -169,9 +128,9 @@ struct NewGoalView: View {
                         .foregroundStyle(.ultraThinMaterial)
                     
                     Menu("\(Image(systemName: "ellipsis"))") {
-                        Button("Delete Goal", action: deleteGoal)
+                        Button("Delete Goal", action: deleteFunc)
                         if goal.state == .doneToday &&  whatBottomTextType(goal) == 2 && goal.timesCompleted > 0{
-                            Button("Complete Goal", action: goalCompleted)
+                            Button("Complete Goal", action: completeFunc)
                         }
                     }
                     .rotationEffect(.degrees(90))

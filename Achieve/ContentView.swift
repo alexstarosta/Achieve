@@ -8,6 +8,7 @@
 import SwiftUI
 
 class goalScreenInfo : ObservableObject {
+    
     @Published var activeGoalsArray: [Goal] = []
     @Published var completedForToday: [Goal] = []
     @Published var deletedGoalsArray: [Goal] = []
@@ -28,6 +29,14 @@ class goalScreenInfo : ObservableObject {
     @Published var showingGoalCompleted = false
     @Published var latestCompleteInfo = Goal()
     @Published var latestCompleteTextType = 0
+    
+    func updateOverall (){
+        self.progressionEnd = currentProgressTotal(self.activeGoalsArray)
+        self.progressionStart = currentProgressStart(self.activeGoalsArray)
+        self.catagoryScores = catagoryPrecedence(self.activeGoalsArray)
+        self.refresh.toggle()
+    }
+    
 }
 
 struct ContentView: View {

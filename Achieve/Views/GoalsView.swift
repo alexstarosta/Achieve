@@ -161,9 +161,9 @@ struct GoalsView: View {
                         }
                     }
                     if screenInfo.activeGoalsArray.isEmpty == false {
-                        ForEach(0...screenInfo.activeGoalsArray.count-1, id: \.self) { index in
-                            if screenInfo.activeGoalsArray[index].state != .deleted {
-                                NewGoalView(goal: screenInfo.activeGoalsArray[index])
+                        ForEach(screenInfo.activeGoalsArray) { goal in
+                            if goal.state == .active{
+                                NewGoalView(goal: goal)
                             }
                         }
                     }
@@ -175,10 +175,10 @@ struct GoalsView: View {
                                 .font(.title2.bold())
                         }
                         
-                        ForEach(0...screenInfo.completedForToday.count-1, id: \.self) { index in
-                            if screenInfo.completedForToday[index].state != .deleted  {
+                        ForEach(screenInfo.completedForToday) { goal in
+                            if goal.state != .deleted {
                                 withAnimation(.easeIn) {
-                                    NewGoalView(goal: screenInfo.completedForToday[index])
+                                    NewGoalView(goal: goal)
                                 }
                             }
                         }
