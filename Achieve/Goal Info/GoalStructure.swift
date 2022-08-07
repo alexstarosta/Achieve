@@ -12,10 +12,7 @@ func getGoalIndex(from: [Goal], user: Goal) -> Int? {
     return from.firstIndex(where: { $0 === user })
 }
 
-class Goal: ObservableObject, Equatable, Identifiable {
-    static func == (lhs: Goal, rhs: Goal) -> Bool {
-        return true
-    }
+class Goal: ObservableObject, Identifiable {
     
     @Published var title: String
     @Published var displayTitle: String
@@ -36,6 +33,7 @@ class Goal: ObservableObject, Equatable, Identifiable {
     @Published var extras = GoalExtras()
     
     @Published var goalID: UUID
+    @Published var goalTimeID: Date
     
     init() {
         self.title = ""
@@ -46,6 +44,7 @@ class Goal: ObservableObject, Equatable, Identifiable {
         self.state = .custom
         self.timesCompleted = 0
         self.goalID = UUID()
+        self.goalTimeID = Date()
     }
     
     func deleteGoal (_ userData: goalScreenInfo,_ goal:Goal){

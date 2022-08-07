@@ -62,6 +62,34 @@ struct GoalsView: View {
 
     @State var showingCreateSequence = false
     
+    @State var goalOrder = "Oldest Goals"
+    
+    func reOrderGoals(_ type:GoalOrder){
+        switch type {
+        case .oldNew:
+            withAnimation(.spring()){
+                screenInfo.activeGoalsArray = screenInfo.activeGoalsArray.sorted(by: {$0.goalTimeID < $1.goalTimeID})
+            }
+                goalOrder = "Oldest Goals"
+        case .newOld:
+            withAnimation(.spring()){
+                screenInfo.activeGoalsArray = screenInfo.activeGoalsArray.sorted(by: {$0.goalTimeID > $1.goalTimeID})
+            }
+                goalOrder = "Newest Goals"
+        case .catagory:
+            withAnimation(.spring()){
+                screenInfo.activeGoalsArray = screenInfo.activeGoalsArray.sorted(by: {$0.catagory!.value < $1.catagory!.value})
+            }
+                goalOrder = "Goal Catagory"
+        case .type:
+            withAnimation(.spring()){
+                screenInfo.activeGoalsArray = screenInfo.activeGoalsArray.sorted(by: {isProgressNeeded($0) && !isProgressNeeded($1)})
+            }
+                goalOrder = "Goal Type"
+        }
+        screenInfo.updateOverall()
+    }
+    
     var body: some View {
         NavigationView {
             ScrollView(.vertical, showsIndicators: false) {
@@ -161,9 +189,33 @@ struct GoalsView: View {
                         }
                     }
                     if screenInfo.activeGoalsArray.isEmpty == false {
+                        
+                        withAnimation(.easeIn) {
+                            HStack{
+                                Text("Active Goals")
+                                    .padding(.top, 10)
+                                    .font(.title2.bold())
+                                
+                                Spacer()
+                                
+                                Menu("\(goalOrder) \(Image(systemName: "chevron.down"))    ") {
+                                    Button("Oldest Goals", action: {reOrderGoals(.oldNew)})
+                                    Button("Newest Goals", action: {reOrderGoals(.newOld)})
+                                    Button("Goal Catagory", action: {reOrderGoals(.catagory)})
+                                    Button("Goal Type", action: {reOrderGoals(.type)})
+                                }
+                                .minimumScaleFactor(0)
+                                .offset(x: 5, y: 5)
+                            }
+                            .frame(width: screenWidth*0.425*2.125)
+                            .menuStyle(DefaultMenuStyle())
+                        }
+                        
                         ForEach(screenInfo.activeGoalsArray) { goal in
                             if goal.state == .active{
-                                NewGoalView(goal: goal)
+                                withAnimation(.spring()) {
+                                    NewGoalView(goal: goal)
+                                }
                             }
                         }
                     }

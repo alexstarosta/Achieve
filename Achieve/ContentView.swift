@@ -14,7 +14,7 @@ class goalScreenInfo : ObservableObject {
     @Published var deletedGoalsArray: [Goal] = []
     @Published var completedGoalsArray: [Goal] = []
     @Published var firstTime = true
-    @Published var showWelcomeScreen = true
+    @Published var showWelcomeScreen = false
     @Published var refresh = true
     
     @Published var progressionEnd: Double = 0

@@ -15,3 +15,10 @@ enum GoalState {
     case deleted
     case gone
 }
+
+enum GoalOrder {
+    case oldNew
+    case newOld
+    case catagory
+    case type
+}

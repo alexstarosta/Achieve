@@ -73,4 +73,23 @@ enum GoalCatagory : CaseIterable {
         }
     }
     
+    var value: Int {
+        switch self {
+            case .health:
+                return 1
+            case .education:
+                return 2
+            case .financial:
+                return 3
+            case .personal:
+                return 4
+            case .social:
+                return 5
+            case .lifestyle:
+                return 6
+            case .othercat:
+                return 7
+        }
+    }
+    
 }
