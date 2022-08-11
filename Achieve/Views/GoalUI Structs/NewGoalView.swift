@@ -64,7 +64,8 @@ func isProgressNeeded (_ goal: Goal) -> Bool {
 
 struct NewGoalView: View {
     
-    @EnvironmentObject var screenInfo: goalScreenInfo
+    @EnvironmentObject var userData: UserData
+    @EnvironmentObject var localUserData: LocalUserData
     
     let goal: Goal
     
@@ -72,18 +73,18 @@ struct NewGoalView: View {
     
     func completeFunc() {
         
-        if screenInfo.disableCompletion == false {
-            screenInfo.latestCompleteInfo = goal
-            screenInfo.latestCompleteTextType = whatBottomTextType(goal)
-            screenInfo.showingGoalCompleted = true
+        if localUserData.disableCompletion == false {
+            localUserData.latestCompleteInfo = goal
+            localUserData.latestCompleteTextType = whatBottomTextType(goal)
+            localUserData.showingGoalCompleted = true
         } else {
-            goal.completeGoal(screenInfo, goal)
+            goal.completeGoal(userData, goal)
         }
         
     }
     
     func deleteFunc (){
-        goal.deleteGoal(screenInfo, goal)
+        goal.deleteGoal(userData, goal)
     }
     
     var body: some View {

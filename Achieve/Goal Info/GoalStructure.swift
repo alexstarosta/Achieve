@@ -14,24 +14,33 @@ func getGoalIndex(from: [Goal], user: Goal) -> Int? {
 
 class Goal: ObservableObject, Identifiable {
     
+    // TITLE ELEMENTS OF GOAL
     @Published var title: String
     @Published var displayTitle: String
     
+    // GOAL CATAGORY
     @Published var catagory: GoalCatagory?
     
+    // OPTIONAL GOAL DIRECTION INDEX
     @Published var directionIndex: Int
     
+    // INFORMATION RELATING TO GOAL SPECIFICATIONS
     @Published var goalInformation = GoalInformation()
     
+    // COLORS ASSOSIATED WITH GOALS
     @Published var accentColor: Color
     @Published var backgroundColor: Color
     
+    // STATE OF THE GOAL
     @Published var state: GoalState
     
+    // AMOUNT OF TIMES TO GOAL HAS BEEN COMPLETED
     @Published var timesCompleted: Int
     
+    // EXTREA GOAL INFORMATION
     @Published var extras = GoalExtras()
     
+    // GOAL ID AND UNIQUE CREATION DATE
     @Published var goalID: UUID
     @Published var goalTimeID: Date
     
@@ -47,7 +56,7 @@ class Goal: ObservableObject, Identifiable {
         self.goalTimeID = Date()
     }
     
-    func deleteGoal (_ userData: goalScreenInfo,_ goal:Goal){
+    func deleteGoal (_ userData: UserData,_ goal:Goal){
         withAnimation(.easeOut) {
             let oldState = goal.state
             goal.state = .deleted
@@ -67,7 +76,7 @@ class Goal: ObservableObject, Identifiable {
         
     }
     
-    func restoreGoal (_ userData: goalScreenInfo,_ goal:Goal){
+    func restoreGoal (_ userData: UserData,_ goal:Goal){
         withAnimation(.easeOut) {
             goal.state = .active
             let goalIndex = getGoalIndex(from: userData.deletedGoalsArray, user: goal)!
@@ -80,7 +89,7 @@ class Goal: ObservableObject, Identifiable {
         
     }
     
-    func completeGoal(_ userData: goalScreenInfo,_ goal:Goal){
+    func completeGoal(_ userData: UserData,_ goal:Goal){
         withAnimation(.easeOut) {
             let oldState = goal.state
             goal.state = .completed
@@ -122,7 +131,7 @@ class Goal: ObservableObject, Identifiable {
         }
     }
     
-    func doneTodayGoal(_ userData: goalScreenInfo,_ goal:Goal){
+    func doneTodayGoal(_ userData: UserData,_ goal:Goal){
         withAnimation(.easeOut) {
             goal.state = .doneToday
             let goalIndex = getGoalIndex(from: userData.activeGoalsArray, user: goal)!
@@ -140,7 +149,7 @@ class Goal: ObservableObject, Identifiable {
         }
     }
     
-    func goneGoal(_ userData: goalScreenInfo,_ goal:Goal){
+    func goneGoal(_ userData: UserData,_ goal:Goal){
         withAnimation(.easeOut) {
             goal.state = .gone
             let goalIndex = getGoalIndex(from: userData.deletedGoalsArray, user: goal)!

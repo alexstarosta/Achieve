@@ -10,7 +10,8 @@ import SwiftUI
 struct CustomizeCreateView: View {
     
     @EnvironmentObject var goal: Goal
-    @EnvironmentObject var screenInfo: goalScreenInfo
+    @EnvironmentObject var userData: UserData
+    @EnvironmentObject var localUserData: LocalUserData
     
     @State var selectedPicker = 1
     
@@ -364,15 +365,11 @@ struct CustomizeCreateView: View {
                 if displayError == false {
                     goal.state = .custom
                     goal.state = .active
-                    screenInfo.activeGoalsArray.append(goal)
-                UIApplication.shared.windows.first?.rootViewController?.dismiss(animated: true)
-                screenInfo.firstTime = false
-                screenInfo.showWelcomeScreen = false
-                    UITableView.appearance().backgroundColor = UIColor.systemGray6
-                    
-                    screenInfo.catagoryScores = catagoryPrecedence(screenInfo.activeGoalsArray)
-                    screenInfo.progressionEnd = currentProgressTotal(screenInfo.activeGoalsArray)
-                    screenInfo.progressionStart = currentProgressStart(screenInfo.activeGoalsArray)
+                    userData.activeGoalsArray.append(goal)
+                    UIApplication.shared.windows.first?.rootViewController?.dismiss(animated: true)
+                    localUserData.firstTime = false
+                    localUserData.showWelcomeScreen = false
+                    userData.updateOverall()
                 }
             }) {
                 Text("Complete Goal")
@@ -393,18 +390,18 @@ struct CustomizeCreateView: View {
         }) {
             Text("Cancel")
         })
-        .preferredColorScheme(screenInfo.darkMode ? .dark : .light)
+        .preferredColorScheme(localUserData.darkMode ? .dark : .light)
     }
 }
 
 struct CustomizeCreateView_Previews: PreviewProvider {
     static let goalInfo = Goal()
-    static let screenInfo = goalScreenInfo()
+    static let userData = UserData()
     static var previews: some View {
         NavigationView {
             CustomizeCreateView()
         }
         .environmentObject(goalInfo)
-        .environmentObject(screenInfo)
+        .environmentObject(userData)
     }
 }

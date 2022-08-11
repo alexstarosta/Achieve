@@ -11,7 +11,8 @@ struct smallCompletedGoalView: View {
     
     let screenWidth = UIScreen.main.bounds.size.width
     
-    @EnvironmentObject var screenInfo: goalScreenInfo
+    @EnvironmentObject var userData: UserData
+    @EnvironmentObject var localUserData: LocalUserData
     
     let goal: Goal
     
@@ -30,7 +31,7 @@ struct smallCompletedGoalView: View {
     func repeatGoal () {
         withAnimation(.easeOut) {
             
-            for activegoal in screenInfo.activeGoalsArray {
+            for activegoal in userData.activeGoalsArray {
                 if goal.goalID == activegoal.goalID{
                     return
                 }
@@ -41,8 +42,8 @@ struct smallCompletedGoalView: View {
             attachValues(copyGoal)
             
             copyGoal.state = .active
-            screenInfo.activeGoalsArray.append(copyGoal)
-            screenInfo.updateOverall()
+            userData.activeGoalsArray.append(copyGoal)
+            userData.updateOverall()
         }
     }
     
@@ -119,16 +120,16 @@ struct smallDeletedGoalView: View {
     
     let screenWidth = UIScreen.main.bounds.size.width
     
-    @EnvironmentObject var screenInfo: goalScreenInfo
+    @EnvironmentObject var userData: UserData
     
     let goal: Goal
     
     func restoreFunc() {
-        goal.restoreGoal(screenInfo, goal)
+        goal.restoreGoal(userData, goal)
     }
     
     func goneFunc() {
-        goal.goneGoal(screenInfo, goal)
+        goal.goneGoal(userData, goal)
     }
     
     var body: some View {
@@ -199,7 +200,7 @@ struct smallGoalView: View {
         
         let screenWidth = UIScreen.main.bounds.size.width
         
-        @EnvironmentObject var screenInfo: goalScreenInfo
+        @EnvironmentObject var userData: UserData
         let goal: Goal
         
         var body: some View {

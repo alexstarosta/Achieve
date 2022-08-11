@@ -14,7 +14,7 @@ struct CatagoryCreateView: View {
     let screenSize = UIScreen.main.bounds.size
     
     @EnvironmentObject var goal: Goal
-    @EnvironmentObject var screenInfo: goalScreenInfo
+    @EnvironmentObject var localUserData: LocalUserData
     
     @State var catagoryError = false
     @State var sendNextView = false
@@ -251,18 +251,18 @@ struct CatagoryCreateView: View {
                 isActive: $sendNextView,
                 label: { EmptyView() })
         )
-        .preferredColorScheme(screenInfo.darkMode ? .dark : .light)
+        .preferredColorScheme(localUserData.darkMode ? .dark : .light)
     }
 }
 
 struct CatagoryCreateView_Previews: PreviewProvider {
     static let goal = Goal()
-    static let screenInfo = goalScreenInfo()
+    static let userData = UserData()
     static var previews: some View {
         NavigationView {
             CatagoryCreateView()
         }
         .environmentObject(goal)
-        .environmentObject(screenInfo)
+        .environmentObject(userData)
     }
 }

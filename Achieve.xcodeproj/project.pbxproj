@@ -18,6 +18,7 @@
 		436848E32894B48800813294 /* CircularProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436848E22894B48800813294 /* CircularProgressView.swift */; };
 		436848E52894B4C800813294 /* SmallGoalViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436848E42894B4C800813294 /* SmallGoalViews.swift */; };
 		436848E72894D70300813294 /* CatagoryProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436848E62894D70300813294 /* CatagoryProgressView.swift */; };
+		43AA5ADD28A49E770003804B /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43AA5ADC28A49E770003804B /* UserData.swift */; };
 		43B0629E288B5168008E7B2F /* AchieveApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43B0629D288B5168008E7B2F /* AchieveApp.swift */; };
 		43B062A0288B5168008E7B2F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43B0629F288B5168008E7B2F /* ContentView.swift */; };
 		43B062A2288B5169008E7B2F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 43B062A1288B5169008E7B2F /* Assets.xcassets */; };
@@ -50,6 +51,7 @@
 		436848E22894B48800813294 /* CircularProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressView.swift; sourceTree = "<group>"; };
 		436848E42894B4C800813294 /* SmallGoalViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallGoalViews.swift; sourceTree = "<group>"; };
 		436848E62894D70300813294 /* CatagoryProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatagoryProgressView.swift; sourceTree = "<group>"; };
+		43AA5ADC28A49E770003804B /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		43B0629A288B5168008E7B2F /* Achieve.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Achieve.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		43B0629D288B5168008E7B2F /* AchieveApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchieveApp.swift; sourceTree = "<group>"; };
 		43B0629F288B5168008E7B2F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -114,6 +116,7 @@
 			isa = PBXGroup;
 			children = (
 				43B0629D288B5168008E7B2F /* AchieveApp.swift */,
+				43AA5ADC28A49E770003804B /* UserData.swift */,
 				43B0629F288B5168008E7B2F /* ContentView.swift */,
 				43D76096289DB7E400CE0FB5 /* Extentions.swift */,
 				43B062C3288B819A008E7B2F /* Goal Info */,
@@ -267,6 +270,7 @@
 				43B062B2288B5298008E7B2F /* GoalsView.swift in Sources */,
 				43B062A0288B5168008E7B2F /* ContentView.swift in Sources */,
 				436848E32894B48800813294 /* CircularProgressView.swift in Sources */,
+				43AA5ADD28A49E770003804B /* UserData.swift in Sources */,
 				43D76093289DB20800CE0FB5 /* GoalStates.swift in Sources */,
 				43B0629E288B5168008E7B2F /* AchieveApp.swift in Sources */,
 				43424B51289225C8006E1B8C /* AddingDirection.swift in Sources */,

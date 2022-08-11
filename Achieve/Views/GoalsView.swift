@@ -58,7 +58,8 @@ func catagoryPrecedence(_ activeGoals:[Goal]) -> [Double] {
 
 struct GoalsView: View {
     
-    @EnvironmentObject var screenInfo: goalScreenInfo
+    @EnvironmentObject var userData: UserData
+    @EnvironmentObject var localUserData: LocalUserData
 
     @State var showingCreateSequence = false
     
@@ -68,26 +69,26 @@ struct GoalsView: View {
         switch type {
         case .oldNew:
             withAnimation(.spring()){
-                screenInfo.activeGoalsArray = screenInfo.activeGoalsArray.sorted(by: {$0.goalTimeID < $1.goalTimeID})
+                userData.activeGoalsArray = userData.activeGoalsArray.sorted(by: {$0.goalTimeID < $1.goalTimeID})
             }
                 goalOrder = "Oldest Goals"
         case .newOld:
             withAnimation(.spring()){
-                screenInfo.activeGoalsArray = screenInfo.activeGoalsArray.sorted(by: {$0.goalTimeID > $1.goalTimeID})
+                userData.activeGoalsArray = userData.activeGoalsArray.sorted(by: {$0.goalTimeID > $1.goalTimeID})
             }
                 goalOrder = "Newest Goals"
         case .catagory:
             withAnimation(.spring()){
-                screenInfo.activeGoalsArray = screenInfo.activeGoalsArray.sorted(by: {$0.catagory!.value < $1.catagory!.value})
+                userData.activeGoalsArray = userData.activeGoalsArray.sorted(by: {$0.catagory!.value < $1.catagory!.value})
             }
                 goalOrder = "Goal Catagory"
         case .type:
             withAnimation(.spring()){
-                screenInfo.activeGoalsArray = screenInfo.activeGoalsArray.sorted(by: {isProgressNeeded($0) && !isProgressNeeded($1)})
+                userData.activeGoalsArray = userData.activeGoalsArray.sorted(by: {isProgressNeeded($0) && !isProgressNeeded($1)})
             }
                 goalOrder = "Goal Type"
         }
-        screenInfo.updateOverall()
+        userData.updateOverall()
     }
     
     var body: some View {
@@ -108,7 +109,7 @@ struct GoalsView: View {
                                 .foregroundStyle(.ultraThinMaterial)
                             
                             ZStack {
-                                CircularProgressView(progress: screenInfo.progressionStart/screenInfo.progressionEnd)
+                                CircularProgressView(progress: userData.progressionStart/userData.progressionEnd)
                                     .frame(width: screenWidth*0.15)
                                     .offset(x: screenWidth*0.04, y: -screenWidth*0.12)
                                 
@@ -121,12 +122,12 @@ struct GoalsView: View {
                                 .offset(x: screenWidth*0.03, y: 15)
                                 .font(.body.bold())
                             
-                            if (screenInfo.progressionStart/screenInfo.progressionEnd).isNaN {
+                            if (userData.progressionStart/userData.progressionEnd).isNaN {
                                 Text("100%")
                                     .offset(x: screenWidth*0.03, y: 45)
                                     .font(.largeTitle.bold())
                             } else {
-                            Text(String(format: "%.f", screenInfo.progressionStart/screenInfo.progressionEnd * 100) + "%")
+                            Text(String(format: "%.f", userData.progressionStart/userData.progressionEnd * 100) + "%")
                                 .offset(x: screenWidth*0.03, y: 45)
                                 .font(.largeTitle.bold())
                             }
@@ -139,7 +140,7 @@ struct GoalsView: View {
                                 .foregroundColor(.gray.opacity(0.25))
                                 .foregroundStyle(.ultraThinMaterial)
                             
-                            Text(String(screenInfo.activeGoalsArray.count))
+                            Text(String(userData.activeGoalsArray.count))
                                 .offset(x: 0, y: -25)
                                 .font(.custom("activeGoalsFont", fixedSize: 90).bold())
                             
@@ -154,15 +155,15 @@ struct GoalsView: View {
                                     .cornerRadius(20)
                                     .offset(x: 0, y: 30)
                                 
-                                if screenInfo.catagoryScores.isEmpty == false && screenInfo.activeGoalsArray.count != 0 {
-                                    CatagoryProgressView(values: screenInfo.catagoryScores)
+                                if userData.catagoryScores.isEmpty == false && userData.activeGoalsArray.count != 0 {
+                                    CatagoryProgressView(values: userData.catagoryScores)
                                 }
                                 
                             }
                         }
                     }
                     
-                    if screenInfo.firstTime {
+                    if localUserData.firstTime {
                         ZStack (alignment: .center) {
                             RoundedRectangle(cornerRadius: 25, style: .circular)
                                 .frame(width: screenWidth*0.425*2.125, height: screenWidth*0.425, alignment: .leading)
@@ -188,7 +189,7 @@ struct GoalsView: View {
                             }
                         }
                     }
-                    if screenInfo.activeGoalsArray.isEmpty == false {
+                    if userData.activeGoalsArray.isEmpty == false {
                         
                         withAnimation(.easeIn) {
                             HStack{
@@ -211,7 +212,7 @@ struct GoalsView: View {
                             .menuStyle(DefaultMenuStyle())
                         }
                         
-                        ForEach(screenInfo.activeGoalsArray) { goal in
+                        ForEach(userData.activeGoalsArray) { goal in
                             if goal.state == .active{
                                 withAnimation(.spring()) {
                                     NewGoalView(goal: goal)
@@ -219,7 +220,7 @@ struct GoalsView: View {
                             }
                         }
                     }
-                    if screenInfo.completedForToday.isEmpty == false {
+                    if userData.completedForToday.isEmpty == false {
                         
                         withAnimation(.easeIn) {
                             Text("Completed Goals Today")
@@ -227,7 +228,7 @@ struct GoalsView: View {
                                 .font(.title2.bold())
                         }
                         
-                        ForEach(screenInfo.completedForToday) { goal in
+                        ForEach(userData.completedForToday) { goal in
                             if goal.state != .deleted {
                                 withAnimation(.easeIn) {
                                     NewGoalView(goal: goal)
@@ -236,14 +237,14 @@ struct GoalsView: View {
                         }
                     }
                 }
-                .sheet(isPresented: $screenInfo.showWelcomeScreen) {
+                .sheet(isPresented: $localUserData.showWelcomeScreen) {
                     WelcomeView()
                 }
                 .sheet(isPresented: $showingCreateSequence) {
                     RootCreateView()
                 }
-                .sheet(isPresented: $screenInfo.showingGoalCompleted) {
-                    CompleteView(goal: screenInfo.latestCompleteInfo, bottomTextType: screenInfo.latestCompleteTextType)
+                .sheet(isPresented: $localUserData.showingGoalCompleted) {
+                    CompleteView(goal: localUserData.latestCompleteInfo, bottomTextType: localUserData.latestCompleteTextType)
                 }
             }
             .navigationTitle("Goals")
@@ -255,14 +256,14 @@ struct GoalsView: View {
             }
             )
         }
-        .preferredColorScheme(screenInfo.darkMode ? .dark : .light)
+        .preferredColorScheme(localUserData.darkMode ? .dark : .light)
     }
 }
 
 struct GoalsView_Previews: PreviewProvider {
-    static let screenInfo = goalScreenInfo()
+    static let userData = UserData()
     static var previews: some View {
         GoalsView()
-            .environmentObject(screenInfo)
+            .environmentObject(userData)
     }
 }

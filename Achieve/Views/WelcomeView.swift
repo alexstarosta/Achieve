@@ -9,7 +9,8 @@ import SwiftUI
 
 struct WelcomeView: View {
     
-    @EnvironmentObject var screenInfo: goalScreenInfo
+    @EnvironmentObject var userData: UserData
+    @EnvironmentObject var localUserData: LocalUserData
     
     @State var titleOffset = -screenWidth
     @State var titleLogoOffset = -screenWidth
@@ -127,7 +128,7 @@ struct WelcomeView: View {
                         }
                         .frame(height: 300)
                         Button(action: {
-                            screenInfo.showWelcomeScreen = false
+                            localUserData.showWelcomeScreen = false
                             self.presentationMode.wrappedValue.dismiss()
                         }) {
                             Text("Continue")
@@ -141,18 +142,18 @@ struct WelcomeView: View {
                         .frame(maxHeight: .infinity, alignment: .bottom)
                 }
                 .offset(x: 0, y: -10)
-                .preferredColorScheme(screenInfo.darkMode ? .dark : .light)
+                .preferredColorScheme(localUserData.darkMode ? .dark : .light)
     }
 }
 
 struct GoalCreateWelcomeView_Previews: PreviewProvider {
     static let goal = Goal()
-    static let screenInfo = goalScreenInfo()
+    static let userData = UserData()
     static var previews: some View {
         ZStack {
             WelcomeView()
         }
         .environmentObject(goal)
-        .environmentObject(screenInfo)
+        .environmentObject(userData)
     }
 }

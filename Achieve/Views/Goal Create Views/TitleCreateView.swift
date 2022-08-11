@@ -45,7 +45,7 @@ struct TitleCreateView: View {
     @State var topIcon = randomIcon()
     
     @EnvironmentObject var goal: Goal
-    @EnvironmentObject var screenInfo: goalScreenInfo
+    @EnvironmentObject var localUserData: LocalUserData
 
     @State var displayError = false
     @State var errorText = ""
@@ -150,19 +150,19 @@ struct TitleCreateView: View {
                 isActive: $sendNextView,
                 label: { EmptyView() })
         )
-        .preferredColorScheme(screenInfo.darkMode ? .dark : .light)
+        .preferredColorScheme(localUserData.darkMode ? .dark : .light)
     }
 }
 
 
 struct TitleCreateView_Previews: PreviewProvider {
     static let goal = Goal()
-    static let screenInfo = goalScreenInfo()
+    static let userData = UserData()
     static var previews: some View {
         NavigationView {
             TitleCreateView()
         }
         .environmentObject(goal)
-        .environmentObject(screenInfo)
+        .environmentObject(userData)
     }
 }

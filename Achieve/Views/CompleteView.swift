@@ -9,7 +9,9 @@ import SwiftUI
 
 struct CompleteView: View {
 
-    @EnvironmentObject var screenInfo: goalScreenInfo
+    @EnvironmentObject var userData: UserData
+    @EnvironmentObject var localUserData: LocalUserData
+    
     let goal: Goal
     let bottomTextType: Int
 
@@ -43,7 +45,7 @@ struct CompleteView: View {
             .frame(maxHeight: .infinity, alignment: .bottom)
             
             Button(action: {
-                goal.completeGoal(screenInfo, goal)
+                goal.completeGoal(userData, goal)
                 self.presentationMode.wrappedValue.dismiss()
             }) {
                 Text("Continue")

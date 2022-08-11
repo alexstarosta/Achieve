@@ -9,7 +9,8 @@ import SwiftUI
 
 struct AchievementsView: View {
     
-    @EnvironmentObject var screenInfo: goalScreenInfo
+    @EnvironmentObject var userData: UserData
+    @EnvironmentObject var localUserData: LocalUserData
     
     var body: some View {
         NavigationView {
@@ -21,7 +22,7 @@ struct AchievementsView: View {
                         .font(.title2.bold())
                         .frame(width: screenWidth * 0.92, alignment: .leading)
                     
-                    if screenInfo.completedGoalsArray.isEmpty {
+                    if userData.completedGoalsArray.isEmpty {
                         ZStack (alignment: .center) {
                             RoundedRectangle(cornerRadius: 25, style: .circular)
                                 .frame(width: screenWidth*0.425*2.125, height: screenWidth*0.425, alignment: .leading)
@@ -49,9 +50,9 @@ struct AchievementsView: View {
                                 .offset(x: 0, y: 35)
                         }
                     } else {
-                        ForEach((0...screenInfo.completedGoalsArray.count-1).reversed(), id: \.self) { index in
-                            if screenInfo.completedGoalsArray[index].state != .deleted {
-                                smallCompletedGoalView(goal: screenInfo.completedGoalsArray[index])
+                        ForEach((0...userData.completedGoalsArray.count-1).reversed(), id: \.self) { index in
+                            if userData.completedGoalsArray[index].state != .deleted {
+                                smallCompletedGoalView(goal: userData.completedGoalsArray[index])
                             }
                         }
                     }
@@ -61,7 +62,7 @@ struct AchievementsView: View {
                         .font(.title2.bold())
                         .frame(width: screenWidth * 0.92, alignment: .leading)
                     
-                    if screenInfo.deletedGoalsArray.isEmpty {
+                    if userData.deletedGoalsArray.isEmpty {
                     ZStack (alignment: .center) {
                         RoundedRectangle(cornerRadius: 25, style: .circular)
                             .frame(width: screenWidth*0.425*2.125, height: screenWidth*0.425, alignment: .leading)
@@ -89,9 +90,9 @@ struct AchievementsView: View {
                             .offset(x: 0, y: 35)
                         }
                     } else {
-                        ForEach((0...screenInfo.deletedGoalsArray.count-1).reversed(), id: \.self) { index in
-                            if screenInfo.deletedGoalsArray[index].state == .deleted {
-                                smallDeletedGoalView(goal: screenInfo.deletedGoalsArray[index])
+                        ForEach((0...userData.deletedGoalsArray.count-1).reversed(), id: \.self) { index in
+                            if userData.deletedGoalsArray[index].state == .deleted {
+                                smallDeletedGoalView(goal: userData.deletedGoalsArray[index])
                             }
                         }
                     }
@@ -101,15 +102,15 @@ struct AchievementsView: View {
             }
         .navigationTitle("Achievements")
         }
-        .preferredColorScheme(screenInfo.darkMode ? .dark : .light)
+        .preferredColorScheme(localUserData.darkMode ? .dark : .light)
     }
 }
 
 
 struct AchievementsView_Previews: PreviewProvider {
-    static let screenInfo = goalScreenInfo()
+    static let userData = UserData()
     static var previews: some View {
         AchievementsView()
-            .environmentObject(screenInfo)
+            .environmentObject(userData)
     }
 }

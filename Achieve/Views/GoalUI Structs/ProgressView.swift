@@ -9,7 +9,9 @@ import SwiftUI
 
 struct ProgressView: View {
     
-    @EnvironmentObject var screenInfo: goalScreenInfo
+    @EnvironmentObject var userData: UserData
+    @EnvironmentObject var localUserData: LocalUserData
+    
     let goal: Goal
     
     @State var startNumber: Int
@@ -39,7 +41,7 @@ struct ProgressView: View {
             startNumber += 1
             if goal.state != .custom {
                 goal.extras.startingNum += 1
-                screenInfo.updateOverall()
+                userData.updateOverall()
             }
         }
         if goal.state != .custom {
@@ -62,7 +64,7 @@ struct ProgressView: View {
             startNumber -= 1
             if goal.state != .custom {
                 goal.extras.startingNum -= 1
-                screenInfo.updateOverall()
+                userData.updateOverall()
             }
         }
     }
@@ -71,12 +73,12 @@ struct ProgressView: View {
         
         if goal.state == .doneToday { return }
         
-        if screenInfo.disableCompletion == false {
-            screenInfo.latestCompleteInfo = goal
-            screenInfo.latestCompleteTextType = bottomTextType
-            screenInfo.showingGoalCompleted = true
+        if localUserData.disableCompletion == false {
+            localUserData.latestCompleteInfo = goal
+            localUserData.latestCompleteTextType = bottomTextType
+            localUserData.showingGoalCompleted = true
         } else {
-            goal.completeGoal(screenInfo, goal)
+            goal.completeGoal(userData, goal)
         }
         
     }
@@ -85,7 +87,7 @@ struct ProgressView: View {
         
         if goal.state == .custom { return }
         
-        goal.doneTodayGoal(screenInfo, goal)
+        goal.doneTodayGoal(userData, goal)
         
     }
     

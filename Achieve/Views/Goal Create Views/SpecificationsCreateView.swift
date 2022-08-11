@@ -10,7 +10,8 @@ import SwiftUI
 struct SpecificationsCreateView: View {
     
     @EnvironmentObject var goal: Goal
-    @EnvironmentObject var screenInfo: goalScreenInfo
+    @EnvironmentObject var userData: UserData
+    @EnvironmentObject var localUserData: LocalUserData
         
     @State var uiUpdate = false
     @State var sendNextView = false
@@ -945,19 +946,19 @@ struct SpecificationsCreateView: View {
                 isActive: $sendNextView,
                 label: { EmptyView() })
         )
-        .preferredColorScheme(screenInfo.darkMode ? .dark : .light)
+        .preferredColorScheme(localUserData.darkMode ? .dark : .light)
     }
 }
 
 struct SpecificationsView_Previews: PreviewProvider {
     static let goal = Goal()
-    static let screenInfo = goalScreenInfo()
+    static let userData = UserData()
     var selectedPicker = 1
     static var previews: some View {
         NavigationView {
             SpecificationsCreateView(selectedPicker: 1)
         }
         .environmentObject(goal)
-        .environmentObject(screenInfo)
+        .environmentObject(userData)
     }
 }

@@ -9,7 +9,8 @@ import SwiftUI
 
 struct SettingsView: View {
     
-    @EnvironmentObject var screenInfo: goalScreenInfo
+    @EnvironmentObject var userData: UserData
+    @EnvironmentObject var localUserData: LocalUserData
     
     init(){
         UITableView.appearance().backgroundColor = UIColor.systemGroupedBackground
@@ -20,23 +21,23 @@ struct SettingsView: View {
             VStack{
                 Form{
                     Section(header: Text("DISPLAY"), footer: Text("The goal completion screen after completing a goal will not appear.")){
-                        Toggle("Disable completion screen", isOn: $screenInfo.disableCompletion)
+                        Toggle("Disable completion screen", isOn: $localUserData.disableCompletion)
                             .tint(.accentColor)
                     }
                     
                     Section("COLORS"){
-                        Toggle("Dark mode", isOn: $screenInfo.darkMode)
+                        Toggle("Dark mode", isOn: $localUserData.darkMode)
                             .tint(.accentColor)
                     }
                     
                     Section(header: Text("NOTIFICATIONS"), footer: Text("Achieve with send a notification at a specific time to remind you to update your goals.")){
-                        Toggle("Activate notifications", isOn: $screenInfo.notificationBool)
+                        Toggle("Activate notifications", isOn: $localUserData.notificationBool)
                             .tint(.accentColor)
-                        if screenInfo.notificationBool == true {
+                        if localUserData.notificationBool == true {
                             HStack{
                                 Text("Notification time")
                                 Spacer()
-                                DatePicker("", selection: $screenInfo.notificationTime, displayedComponents: .hourAndMinute)
+                                DatePicker("", selection: $localUserData.notificationTime, displayedComponents: .hourAndMinute)
                             }
                         }
                     }
@@ -64,14 +65,14 @@ struct SettingsView: View {
             }
             .navigationTitle("Settings")
         }
-        .preferredColorScheme(screenInfo.darkMode ? .dark : .light)
+        .preferredColorScheme(localUserData.darkMode ? .dark : .light)
     }
 }
 
 struct SettingsView_Previews: PreviewProvider {
-    static let screenInfo = goalScreenInfo()
+    static let userData = UserData()
     static var previews: some View {
         SettingsView()
-            .environmentObject(screenInfo)
+            .environmentObject(userData)
     }
 }
