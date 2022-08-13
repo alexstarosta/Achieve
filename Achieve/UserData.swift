@@ -45,11 +45,22 @@ class LocalUserData : ObservableObject {
     // USER SETTINGS BASED ON LOCAL PREFRENCES
     @Published var disableCompletion = false
     @Published var darkMode = false
+    @Published var notificationAllowed: NotifState = .unknown
     @Published var notificationBool = false
-    @Published var notificationTime = Date()
+    @Published var notificationTime: Date
     
     // BASIC GOAL COMPLETION INFO
     @Published var showingGoalCompleted = false
     @Published var latestCompleteInfo = Goal()
     @Published var latestCompleteTextType = 0
+    
+    init() {
+        var dateComponents = DateComponents()
+        dateComponents.hour = 19
+        dateComponents.minute = 30
+
+        let userCalendar = Calendar(identifier: .gregorian)
+        self.notificationTime = userCalendar.date(from: dateComponents)!
+    }
+    
 }

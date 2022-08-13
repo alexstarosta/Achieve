@@ -6,14 +6,46 @@
 //
 
 import SwiftUI
+import UserNotifications
+
+enum NotifState {
+    case allowed
+    case disallowed
+    case unknown
+}
 
 struct SettingsView: View {
     
     @EnvironmentObject var userData: UserData
     @EnvironmentObject var localUserData: LocalUserData
     
+    @Environment(\.scenePhase) var scenePhase
+    
     init(){
         UITableView.appearance().backgroundColor = UIColor.systemGroupedBackground
+    }
+    
+    func checkNotifPerms() {
+        let currentPermission = UNUserNotificationCenter.current()
+        
+        currentPermission.getNotificationSettings { settings in
+            switch settings.authorizationStatus {
+            case .denied, .provisional, .ephemeral:
+                DispatchQueue.main.async {
+                    localUserData.notificationAllowed = .disallowed
+                }
+            case .authorized:
+                DispatchQueue.main.async {
+                    localUserData.notificationAllowed = .allowed
+                }
+            case .notDetermined:
+                DispatchQueue.main.async {
+                    localUserData.notificationAllowed = .unknown
+                }
+            @unknown default:
+                localUserData.notificationAllowed = .disallowed
+            }
+        }
     }
     
     var body: some View {
@@ -31,13 +63,33 @@ struct SettingsView: View {
                     }
                     
                     Section(header: Text("NOTIFICATIONS"), footer: Text("Achieve with send a notification at a specific time to remind you to update your goals.")){
-                        Toggle("Activate notifications", isOn: $localUserData.notificationBool)
-                            .tint(.accentColor)
+                        
+                        if localUserData.notificationAllowed == .allowed {
+                            Toggle("Activate notifications", isOn: $localUserData.notificationBool)
+                                .tint(.accentColor)
+                            
+                        } else if localUserData.notificationAllowed == .disallowed {
+                            Text("Allow \"Achieve\" to send notifications in settings")
+                                .font(.caption.bold())
+                                .foregroundColor(.secondary)
+                            
+                        } else {
+                            Button("Allow Notifications") {
+                                UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+                                    if success {
+                                        checkNotifPerms()
+                                    }
+                                }
+                            }
+                        }
+                        
+                        
                         if localUserData.notificationBool == true {
                             HStack{
                                 Text("Notification time")
                                 Spacer()
                                 DatePicker("", selection: $localUserData.notificationTime, displayedComponents: .hourAndMinute)
+                                    
                             }
                         }
                     }
@@ -66,13 +118,46 @@ struct SettingsView: View {
             .navigationTitle("Settings")
         }
         .preferredColorScheme(localUserData.darkMode ? .dark : .light)
+        .onAppear() {
+            checkNotifPerms()
+        }
+        .onChange(of: scenePhase) { newPhase in
+            if newPhase == .active {
+                checkNotifPerms()
+            }
+        }
+        .onChange(of: localUserData.notificationTime) { time in
+            
+            if localUserData.notificationBool == false {return}
+            
+            UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: ["reminderNotif"])
+            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["reminderNotif"])
+            
+            let content = UNMutableNotificationContent()
+            content.title = "Test notification"
+            content.subtitle = "Test notification"
+            content.sound = UNNotificationSound.default
+            
+            var notifDate = DateComponents()
+            let calendar = Calendar.current
+            notifDate.hour = calendar.component(.hour, from: time)
+            notifDate.minute = calendar.component(.minute, from: time)
+            let trigger = UNCalendarNotificationTrigger(dateMatching: notifDate, repeats: true)
+            
+            let request = UNNotificationRequest(
+                identifier: "reminderNotif", content: content, trigger: trigger
+            )
+            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+        }
     }
 }
 
 struct SettingsView_Previews: PreviewProvider {
     static let userData = UserData()
+    static let localUserData = LocalUserData()
     static var previews: some View {
         SettingsView()
             .environmentObject(userData)
+            .environmentObject(localUserData)
     }
 }
