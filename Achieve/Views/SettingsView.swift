@@ -14,6 +14,21 @@ enum NotifState {
     case unknown
 }
 
+func randomSubtitle() -> String {
+    let randomInt = Int.random(in: 1..<7)
+    
+    switch randomInt {
+        case 1: return "Remember to check your goals!"
+        case 2: return "Just a quick reminder to check your goals!"
+        case 3: return "Check your goals for today, you got this!"
+        case 4: return "Remember to check your goals for today!"
+        case 5: return "Had a productive day today? Be sure to check your goals!"
+        case 6: return "Made some progress? Be sure to update your goals!"
+        default: return "Remember to update your goals for today!"
+    }
+    
+}
+
 struct SettingsView: View {
     
     @EnvironmentObject var userData: UserData
@@ -126,6 +141,28 @@ struct SettingsView: View {
                 checkNotifPerms()
             }
         }
+        .onChange(of: localUserData.notificationBool) { bool in
+            if bool == false {
+                UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: ["reminderNotif"])
+                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["reminderNotif"])
+            } else {
+                let content = UNMutableNotificationContent()
+                content.title = "Achieve Goal Reminder"
+                content.body = randomSubtitle()
+                content.sound = UNNotificationSound.default
+                
+                var notifDate = DateComponents()
+                let calendar = Calendar.current
+                notifDate.hour = calendar.component(.hour, from: localUserData.notificationTime)
+                notifDate.minute = calendar.component(.minute, from: localUserData.notificationTime)
+                let trigger = UNCalendarNotificationTrigger(dateMatching: notifDate, repeats: true)
+                
+                let request = UNNotificationRequest(
+                    identifier: "reminderNotif", content: content, trigger: trigger
+                )
+                UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            }
+        }
         .onChange(of: localUserData.notificationTime) { time in
             
             if localUserData.notificationBool == false {return}
@@ -134,8 +171,8 @@ struct SettingsView: View {
             UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["reminderNotif"])
             
             let content = UNMutableNotificationContent()
-            content.title = "Test notification"
-            content.subtitle = "Test notification"
+            content.title = "Achieve Goal Reminder"
+            content.body = randomSubtitle()
             content.sound = UNNotificationSound.default
             
             var notifDate = DateComponents()
