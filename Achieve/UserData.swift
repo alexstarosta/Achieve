@@ -37,17 +37,45 @@ class UserData : ObservableObject {
 class LocalUserData : ObservableObject {
     
     // SHOWS USER FIRST TIME CREATE BUTTON
-    @Published var firstTime = true
+    @Published var firstTime = true {
+        didSet {
+            UserDefaults.standard.set(updateLocalSettingsArray(self), forKey: "localData")
+        }
+    }
     
     // SHOWS USER THE WELCOME SCREEN
-    @Published var showWelcomeScreen = false
+    @Published var showWelcomeScreen = true {
+        didSet {
+            UserDefaults.standard.set(updateLocalSettingsArray(self), forKey: "localData")
+        }
+    }
     
     // USER SETTINGS BASED ON LOCAL PREFRENCES
-    @Published var disableCompletion = false
-    @Published var darkMode = false
-    @Published var notificationAllowed: NotifState = .unknown
-    @Published var notificationBool = false
-    @Published var notificationTime: Date
+    @Published var disableCompletion = false {
+        didSet {
+            UserDefaults.standard.set(updateLocalSettingsArray(self), forKey: "localData")
+        }
+    }
+    @Published var darkMode = false {
+        didSet {
+            UserDefaults.standard.set(updateLocalSettingsArray(self), forKey: "localData")
+        }
+    }
+    @Published var notificationAllowed: NotifState = .unknown {
+        didSet {
+            UserDefaults.standard.set(updateLocalSettingsArray(self), forKey: "localData")
+        }
+    }
+    @Published var notificationBool = false {
+        didSet {
+            UserDefaults.standard.set(updateLocalSettingsArray(self), forKey: "localData")
+        }
+    }
+    @Published var notificationTime: Date {
+        didSet {
+            UserDefaults.standard.set(updateLocalSettingsArray(self), forKey: "localData")
+        }
+    }
     
     // BASIC GOAL COMPLETION INFO
     @Published var showingGoalCompleted = false
@@ -55,12 +83,94 @@ class LocalUserData : ObservableObject {
     @Published var latestCompleteTextType = 0
     
     init() {
-        var dateComponents = DateComponents()
-        dateComponents.hour = 19
-        dateComponents.minute = 30
+        
+        let localValues = UserDefaults.standard.object(forKey: "localData") as? [Int]
+        
+        if localValues == nil {
+            var dateComponents = DateComponents()
+            dateComponents.hour = 19
+            dateComponents.minute = 30
 
-        let userCalendar = Calendar(identifier: .gregorian)
-        self.notificationTime = userCalendar.date(from: dateComponents)!
+            let userCalendar = Calendar(identifier: .gregorian)
+            self.notificationTime = userCalendar.date(from: dateComponents)!
+            
+        } else {
+            
+            func intBool(_ int:Int) -> Bool {
+                if int == 1 {
+                    return true
+                } else {
+                    return false
+                }
+            }
+            
+            func intNotifState (_ int:Int) -> NotifState {
+                switch int {
+                case 1:
+                    return .allowed
+                case 0:
+                    return .disallowed
+                case 2:
+                    return .unknown
+                default:
+                    return .unknown
+                }
+            }
+            
+            self.firstTime = intBool(localValues![0])
+            self.showWelcomeScreen = intBool(localValues![1])
+            self.disableCompletion = intBool(localValues![2])
+            self.darkMode = intBool(localValues![3])
+            self.notificationBool = intBool(localValues![4])
+            
+            self.notificationAllowed = intNotifState(localValues![5])
+            
+            var dateComponents = DateComponents()
+            dateComponents.hour = localValues![6]
+            dateComponents.minute = localValues![7]
+
+            let userCalendar = Calendar(identifier: .gregorian)
+            self.notificationTime = userCalendar.date(from: dateComponents)!
+        }
     }
+    
+    
+    
+}
+
+func updateLocalSettingsArray(_ localData: LocalUserData) -> [Int] {
+    var intArray: [Int] = []
+    
+    func boolInt(_ bool:Bool) -> Int {
+        if bool {
+            return 1
+        } else {
+            return 0
+        }
+    }
+    
+    func boolNotifState (_ notifState:NotifState) -> Int {
+        switch notifState {
+        case .allowed:
+            return 1
+        case .disallowed:
+            return 0
+        case .unknown:
+            return 2
+        }
+    }
+    
+    intArray.append(boolInt(localData.firstTime))
+    intArray.append(boolInt(localData.showWelcomeScreen))
+    intArray.append(boolInt(localData.disableCompletion))
+    intArray.append(boolInt(localData.darkMode))
+    intArray.append(boolInt(localData.notificationBool))
+    
+    intArray.append(boolNotifState(localData.notificationAllowed))
+    
+    intArray.append(Calendar.current.component(.hour, from: localData.notificationTime))
+    intArray.append(Calendar.current.component(.minute, from: localData.notificationTime))
+    
+    return intArray
     
 }
