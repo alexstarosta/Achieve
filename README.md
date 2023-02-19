@@ -14,7 +14,7 @@ Achieve is built using the following technologies:
 * **Swift**: A popular iOS language that is used to create the entire app.
 * **SwiftUI**: A graphics toolkit that is used to create all the app’s views and UI elements.
 
-##Future Developments
+## Future Developments
 Looking forward, there are many new additions and improvements:
 
 * **UI Redesign**: New user flow and goal creation process with an easier-to-use set of configurations
