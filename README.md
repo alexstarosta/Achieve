@@ -1,5 +1,6 @@
 # Achieve ![achieveIconBlankWhite](https://user-images.githubusercontent.com/110436783/219915210-3f2471d1-fb73-4d90-9200-e0aaa8f4d860.png)
-Achieve is a dynamic goal-setting app that helps you organize your life by setting and achieving your goals. With Achieve, you can easily create, track, and manage your personal and professional goals, ensuring that you stay focused and motivated. With an effective goal creator, an interactive goal viewer and an intelligent goal analyzer, Achieve becomes an all-in-one tool that adapts to fit your needs.
+Achieve is a dynamic goal-setting app that helps you organize your life by setting and achieving your goals. With Achieve, you can easily create, track, and manage your personal and professional goals, ensuring that you stay focused and motivated. With an effective goal creator, an interactive goal viewer and an intelligent goal analyzer, Achieve becomes an all-in-one tool that adapts to fit your needs. 
+Created during an internship at Our Wave Hub in partnership with Apple Canada.
 
 ## Features
 * **Goal setting**: Create your goals with hundreds of possible goal configurations and visual editing options.
