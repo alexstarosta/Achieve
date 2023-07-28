@@ -22,6 +22,10 @@ Looking forward, there are many new additions and improvements:
 * **Habits**: An overhaul of the goal system that includes new options to create “habits” which will replace the daily/weekly goals.
 * **Local Storage/Database Integration**: Local and external storage of user’s goal information to bring the app closer to release.
 
+## Screenshots
+
+![screenshots](https://github.com/alexstarosta/achieve/assets/110436783/b33e9148-4d0e-486e-806a-c7b3ffde92cd)
+
 ## Contributing
 
 Contributions are always welcome! If you find a bug or have an idea for a new feature, please submit an issue on the GitHub repository. If you would like to contribute to the project, please feel free to fork the repository and submit a pull request.
