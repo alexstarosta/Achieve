@@ -314,8 +314,6 @@ struct SpecificationsCreateView: View {
                             .offset(x: 0, y: -145)
                         
                         ZStack{
-                            
-                            Form{
                                 ScrollView (showsIndicators: false){
                                     Section {
                                         HStack {
@@ -522,12 +520,6 @@ struct SpecificationsCreateView: View {
                                 }
                                 .background(Color(UIColor.systemBackground))
                                 .frame(width:300, height: 276, alignment: .top)
-                                .offset(x:-20)
-                            }
-                            .onAppear{
-                                UITableView.appearance().backgroundColor = .clear
-                            }
-                            .frame(width: 340)
                             
                             Rectangle()
                                 .frame(width: 300, height: 25, alignment: .center)
@@ -573,8 +565,6 @@ struct SpecificationsCreateView: View {
                             .offset(x: 0, y: -145)
                         
                         ZStack{
-                            
-                            Form{
                                 ScrollView (showsIndicators: false){
                                     
                                     Section {
@@ -819,12 +809,6 @@ struct SpecificationsCreateView: View {
                                 }
                                 .background(Color(UIColor.systemBackground))
                                 .frame(width:300, height: 276, alignment: .center)
-                                .offset(x:-20)
-                            }
-                            .onAppear{
-                                UITableView.appearance().backgroundColor = .clear
-                            }
-                            .frame(width: 340)
                             
                             Rectangle()
                                 .frame(width: 300, height: 25, alignment: .center)

@@ -115,7 +115,7 @@ struct WelcomeView: View {
                                         .bold()
                                     
                                     Text("Find various goal recommendations to help create the best goals.")
-                                        .frame(width: screenWidth*0.6, alignment: .leading)
+                                        .frame(width: screenWidth*0.62, alignment: .leading)
                                         .opacity(0.75)
                                         .font(.body)
                                 }
