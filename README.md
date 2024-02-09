@@ -1,6 +1,24 @@
-# Achieve ![achieveIconBlankWhite](https://user-images.githubusercontent.com/110436783/219915210-3f2471d1-fb73-4d90-9200-e0aaa8f4d860.png)
-Achieve is a dynamic goal-setting app that helps you organize your life by setting and achieving your goals. With Achieve, you can easily create, track, and manage your personal and professional goals, ensuring that you stay focused and motivated. With an effective goal creator, an interactive goal viewer and an intelligent goal analyzer, Achieve becomes an all-in-one tool that adapts to fit your needs. 
-Created during an internship at Our Wave Hub in partnership with Apple Canada.
+<p align="center">
+    <img width="250" alt="Achieve Mockup" src="https://github.com/alexstarosta/achieve/assets/110436783/626af282-e4ad-4554-b880-d929e1e3703b">
+</p>
+
+
+<p align="center"><strong>Your goals, one app.</strong></p>
+<br/>
+
+<p align="center">
+  <img src="https://img.shields.io/static/v1?label=iOS&message=15.4&color=2ea44f&style=for-the-badge&logo=Apple" alt="iOS - 15.4">
+  <img src="https://img.shields.io/static/v1?label=&message=Swift&color=%23fe5a2e&style=for-the-badge&logo=Swift&logoColor=fff" alt="Swift">
+  <img src="https://img.shields.io/static/v1?label=&message=Swiftui&color=%230289fe&style=for-the-badge&logo=Swift&logoColor=000" alt="Swiftui">
+</p>
+
+<h2 align="center">Achieve</h2>
+<br/>
+<p align="center">
+  Achieve is a dynamic goal-setting app with <strong>progress tracking</strong>, <strong>visualization</strong>, and <strong>personalized recommendations</strong>.
+</p>
+<br/>
+<br/>
 
 ## Features
 * **Goal setting**: Create your goals with hundreds of possible goal configurations and visual editing options.
@@ -9,23 +27,5 @@ Created during an internship at Our Wave Hub in partnership with Apple Canada.
 * **Goal Direction**: View and modify several goal recommendations and suggestions to generate new goal ideas.
 * **Quick and Easy**:  Expedite your goal endeavours with multiple quality-of-life functions and automatic goal recognition.
 
-## Technologies
-Achieve is built using the following technologies:
-
-* **Swift**: A popular iOS language that is used to create the entire app.
-* **SwiftUI**: A graphics toolkit that is used to create all the app’s views and UI elements.
-
-## Future Developments
-Looking forward, there are many new additions and improvements:
-
-* **UI Redesign**: New user flow and goal creation process with an easier-to-use set of configurations
-* **Habits**: An overhaul of the goal system that includes new options to create “habits” which will replace the daily/weekly goals.
-* **Local Storage/Database Integration**: Local and external storage of user’s goal information to bring the app closer to release.
-
-## Screenshots
-
-![screenshots](https://github.com/alexstarosta/achieve/assets/110436783/b33e9148-4d0e-486e-806a-c7b3ffde92cd)
-
-## Contributing
-
-Contributions are always welcome! If you find a bug or have an idea for a new feature, please submit an issue on the GitHub repository. If you would like to contribute to the project, please feel free to fork the repository and submit a pull request.
+## Info
+* Created during an internship at Our Wave Hub in partnership with Apple Canada
